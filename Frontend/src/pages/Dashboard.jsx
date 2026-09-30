@@ -14,12 +14,14 @@ import { Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { useEffect, useState } from "react";
 import { getDashboard } from "../api/dashboard";
+import { getActivities } from "../api/activity";
 
 function Dashboard() {
   const { user } = useUser();
   const hour = new Date().getHours();
 
   let greeting = "Good Morning";
+
   if (hour >= 12 && hour < 17) {
     greeting = "Good Afternoon";
   } else if (hour >= 17) {
@@ -27,16 +29,20 @@ function Dashboard() {
   }
 
   const firstName = user?.fullName?.split(" ")[0] || "";
+
   const [stats, setStats] = useState({
-  resumeCount: 0,
-  jobCount: 0,
-  interviewCount: 0,
-});
+    resumeCount: 0,
+    jobCount: 0,
+    interviewCount: 0,
+  });
+
+  const [activities, setActivities] = useState([]);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const response = await getDashboard();
+
         if (response?.data?.data) {
           setStats(response.data.data);
         }
@@ -46,6 +52,22 @@ function Dashboard() {
     };
 
     fetchDashboard();
+  }, []);
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const response = await getActivities();
+
+        if (response?.data?.data) {
+          setActivities(response.data.data);
+        }
+      } catch (error) {
+        console.error("Activity Error:", error);
+      }
+    };
+
+    fetchActivities();
   }, []);
 
   return (
@@ -60,7 +82,7 @@ function Dashboard() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight">
-           Welcome {user?.fullName?.trim().split(/\s+/)[0] || "User"} 👋
+            Welcome {user?.fullName?.trim().split(/\s+/)[0] || "User"} 👋
           </h1>
 
           <p className="text-sm sm:text-base text-blue-100/90 dark:text-slate-300 leading-relaxed">
@@ -82,33 +104,33 @@ function Dashboard() {
 
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-       <DashboardCard
-  title="Resumes"
-  value={stats.resumeCount}
-  icon={<FileText size={24} />}
-  color="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60"
-/>
+        <DashboardCard
+          title="Resumes"
+          value={stats.resumeCount}
+          icon={<FileText size={24} />}
+          color="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60"
+        />
 
-<DashboardCard
-  title="Job Applications"
-  value={stats.jobCount}
-  icon={<Target size={24} />}
-  color="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60"
-/>
+        <DashboardCard
+          title="Job Applications"
+          value={stats.jobCount}
+          icon={<Target size={24} />}
+          color="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60"
+        />
 
-<DashboardCard
-  title="Interviews"
-  value={stats.interviewCount}
-  icon={<BookOpen size={24} />}
-  color="text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/60"
-/>
+        <DashboardCard
+          title="Interviews"
+          value={stats.interviewCount}
+          icon={<BookOpen size={24} />}
+          color="text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/60"
+        />
 
-<DashboardCard
-  title="AI Features"
-  value="Coming Soon"
-  icon={<Brain size={24} />}
-  color="text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60"
-/>
+        <DashboardCard
+          title="AI Features"
+          value="Coming Soon"
+          icon={<Brain size={24} />}
+          color="text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60"
+        />
       </div>
 
       {/* Main Layout: Actions & Analytics */}
@@ -128,6 +150,7 @@ function Dashboard() {
                 <div className="w-12 h-12 mx-auto rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <FileText size={24} />
                 </div>
+
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   Resume
                 </p>
@@ -140,6 +163,7 @@ function Dashboard() {
                 <div className="w-12 h-12 mx-auto rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <BookOpen size={24} />
                 </div>
+
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   Learning
                 </p>
@@ -152,6 +176,7 @@ function Dashboard() {
                 <div className="w-12 h-12 mx-auto rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <Target size={24} />
                 </div>
+
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   Interview
                 </p>
@@ -164,6 +189,7 @@ function Dashboard() {
                 <div className="w-12 h-12 mx-auto rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <Brain size={24} />
                 </div>
+
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   Profile
                 </p>
@@ -174,47 +200,45 @@ function Dashboard() {
           {/* Activity Section */}
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
-              <Clock size={18} className="text-blue-500" /> Recent Activity
+              <Clock size={18} className="text-blue-500" />
+              Recent Activity
             </h2>
 
             <div className="space-y-3.5">
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                    <CheckCircle2 size={18} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
-                      Resume analyzed successfully
-                    </p>
-                    <p className="text-[11px] text-slate-400">
-                      ATS match updated
-                    </p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-semibold text-slate-400">
-                  Today
-                </span>
-              </div>
+              {activities.length === 0 ? (
+                <p className="text-sm text-slate-400 text-center py-6">
+                  No recent activity yet.
+                </p>
+              ) : (
+                activities.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                        <CheckCircle2 size={18} />
+                      </div>
 
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                    <CheckCircle2 size={18} />
+                      <div>
+                        <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                          {activity.title}
+                        </p>
+
+                        {activity.description && (
+                          <p className="text-[11px] text-slate-400">
+                            {activity.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <span className="text-[10px] font-semibold text-slate-400">
+                      {new Date(activity.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
-                      Learning roadmap generated
-                    </p>
-                    <p className="text-[11px] text-slate-400">
-                      React & Node.js architecture
-                    </p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-semibold text-slate-400">
-                  Yesterday
-                </span>
-              </div>
+                ))
+              )}
             </div>
           </div>
         </div>
