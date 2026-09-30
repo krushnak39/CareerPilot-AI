@@ -46,6 +46,15 @@ app.use(
     extended: true,
   })
 );
+app.use(
+  "/uploads",
+  express.static(
+    require("path").join(
+      process.cwd(),
+      "uploads"
+    )
+  )
+);
 
 // ==========================
 // HEALTH CHECK

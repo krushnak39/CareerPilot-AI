@@ -28,11 +28,10 @@ function Dashboard() {
 
   const firstName = user?.fullName?.split(" ")[0] || "";
   const [stats, setStats] = useState({
-    resumeScore: 0,
-    atsScore: 0,
-    learningProgress: 0,
-    skillGap: 0,
-  });
+  resumeCount: 0,
+  jobCount: 0,
+  interviewCount: 0,
+});
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -83,30 +82,30 @@ function Dashboard() {
 
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-        <DashboardCard
-  title="Resume Score"
-  value={`${stats.resumeScore}%`}
+       <DashboardCard
+  title="Resumes"
+  value={stats.resumeCount}
   icon={<FileText size={24} />}
   color="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60"
 />
 
 <DashboardCard
-  title="ATS Score"
-  value={`${stats.atsScore}%`}
+  title="Job Applications"
+  value={stats.jobCount}
   icon={<Target size={24} />}
   color="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60"
 />
 
 <DashboardCard
-  title="Learning Progress"
-  value={`${stats.learningProgress}%`}
+  title="Interviews"
+  value={stats.interviewCount}
   icon={<BookOpen size={24} />}
   color="text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/60"
 />
 
 <DashboardCard
-  title="Skill Gap"
-  value={`${stats.skillGap} Skills`}
+  title="AI Features"
+  value="Coming Soon"
   icon={<Brain size={24} />}
   color="text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60"
 />
