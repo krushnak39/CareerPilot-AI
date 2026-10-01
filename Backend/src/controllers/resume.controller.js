@@ -212,6 +212,13 @@ const replaceResume = async (req, res, next) => {
       fileSize: req.file.size,
     });
 
+    await createActivity({
+      userId: req.user.id,
+      type: "RESUME_REPLACED",
+      title: "Resume replaced",
+      description: resume.fileName,
+    });
+
     return res.status(200).json({
       success: true,
       message: "Resume replaced successfully",
