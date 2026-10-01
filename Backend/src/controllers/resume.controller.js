@@ -174,6 +174,13 @@ const updateResumeTitleController = async (
       title,
     });
 
+    await createActivity({
+      userId: req.user.id,
+      type: "RESUME_TITLE_UPDATED",
+      title: "Resume title updated",
+      description: resume.title,
+    });
+
     return res.status(200).json({
       success: true,
       message: "Resume title updated successfully",
@@ -318,6 +325,13 @@ const removeResume = async (req, res, next) => {
     const resume = await deleteResume({
       resumeId: req.params.id,
       userId: req.user.id,
+    });
+
+    await createActivity({
+      userId: req.user.id,
+    type: "RESUME_DELETED",
+    title: "Resume deleted",
+    description: resume.fileName,
     });
 
     return res.status(200).json({
