@@ -1,0 +1,288 @@
+{
+  "Software Developer": {
+    "domain": "software_it",
+    "skills": [
+      "python",
+      "java",
+      "javascript",
+      "sql",
+      "git",
+      "programming"
+    ]
+  },
+
+  "Backend Developer": {
+    "domain": "software_it",
+    "skills": [
+      "python",
+      "fastapi",
+      "django",
+      "node.js",
+      "sql",
+      "rest api",
+      "docker"
+    ]
+  },
+
+  "Frontend Developer": {
+    "domain": "software_it",
+    "skills": [
+      "html",
+      "css",
+      "javascript",
+      "react",
+      "typescript"
+    ]
+  },
+
+  "Full Stack Developer": {
+    "domain": "software_it",
+    "skills": [
+      "html",
+      "css",
+      "javascript",
+      "react",
+      "node.js",
+      "python",
+      "sql",
+      "git"
+    ]
+  },
+
+  "DevOps Engineer": {
+    "domain": "software_it",
+    "skills": [
+      "linux",
+      "docker",
+      "kubernetes",
+      "aws",
+      "git",
+      "ci/cd"
+    ]
+  },
+
+  "Data Analyst": {
+    "domain": "data_ai",
+    "skills": [
+      "python",
+      "sql",
+      "excel",
+      "pandas",
+      "numpy",
+      "data analysis",
+      "statistics"
+    ]
+  },
+
+  "Data Scientist": {
+    "domain": "data_ai",
+    "skills": [
+      "python",
+      "pandas",
+      "numpy",
+      "scikit-learn",
+      "machine learning",
+      "statistics",
+      "sql"
+    ]
+  },
+
+  "Machine Learning Engineer": {
+    "domain": "data_ai",
+    "skills": [
+      "python",
+      "machine learning",
+      "deep learning",
+      "tensorflow",
+      "pytorch",
+      "scikit-learn",
+      "sql"
+    ]
+  },
+
+  "AI Engineer": {
+    "domain": "data_ai",
+    "skills": [
+      "python",
+      "machine learning",
+      "deep learning",
+      "llm",
+      "rag",
+      "pytorch",
+      "tensorflow"
+    ]
+  },
+
+  "Mechanical Design Engineer": {
+    "domain": "mechanical",
+    "skills": [
+      "autocad",
+      "solidworks",
+      "catia",
+      "cad",
+      "mechanical design"
+    ]
+  },
+
+  "Manufacturing Engineer": {
+    "domain": "mechanical",
+    "skills": [
+      "manufacturing",
+      "cad",
+      "cam",
+      "autocad",
+      "production"
+    ]
+  },
+
+  "Automotive Engineer": {
+    "domain": "mechanical",
+    "skills": [
+      "automotive",
+      "mechanical engineering",
+      "cad",
+      "manufacturing",
+      "thermodynamics"
+    ]
+  },
+
+  "Civil Engineer": {
+    "domain": "civil",
+    "skills": [
+      "civil engineering",
+      "autocad",
+      "construction",
+      "surveying"
+    ]
+  },
+
+  "Structural Engineer": {
+    "domain": "civil",
+    "skills": [
+      "structural engineering",
+      "structural analysis",
+      "autocad",
+      "revit",
+      "construction"
+    ]
+  },
+
+  "Site Engineer": {
+    "domain": "civil",
+    "skills": [
+      "construction",
+      "site management",
+      "surveying",
+      "autocad",
+      "civil engineering"
+    ]
+  },
+
+  "Electrical Engineer": {
+    "domain": "electrical",
+    "skills": [
+      "electrical engineering",
+      "electrical machines",
+      "power systems",
+      "control systems",
+      "matlab"
+    ]
+  },
+
+  "Power Systems Engineer": {
+    "domain": "electrical",
+    "skills": [
+      "power systems",
+      "electrical engineering",
+      "matlab",
+      "scada",
+      "control systems"
+    ]
+  },
+
+  "Embedded Engineer": {
+    "domain": "electronics",
+    "skills": [
+      "embedded systems",
+      "embedded c",
+      "microcontroller",
+      "arduino",
+      "iot"
+    ]
+  },
+
+  "VLSI Engineer": {
+    "domain": "electronics",
+    "skills": [
+      "vlsi",
+      "verilog",
+      "digital electronics",
+      "electronics engineering"
+    ]
+  },
+
+  "Financial Analyst": {
+    "domain": "business_finance",
+    "skills": [
+      "finance",
+      "excel",
+      "financial analysis",
+      "accounting",
+      "statistics"
+    ]
+  },
+
+  "Accountant": {
+    "domain": "business_finance",
+    "skills": [
+      "accounting",
+      "finance",
+      "excel",
+      "taxation",
+      "bookkeeping"
+    ]
+  },
+
+  "Business Analyst": {
+    "domain": "business_finance",
+    "skills": [
+      "business analysis",
+      "excel",
+      "sql",
+      "statistics",
+      "communication"
+    ]
+  },
+
+  "UI Designer": {
+    "domain": "design",
+    "skills": [
+      "figma",
+      "ui design",
+      "visual design",
+      "user interface"
+    ]
+  },
+
+  "UX Designer": {
+    "domain": "design",
+    "skills": [
+      "figma",
+      "ux design",
+      "user research",
+      "wireframing",
+      "prototyping"
+    ]
+  },
+
+  "Graphic Designer": {
+    "domain": "design",
+    "skills": [
+      "graphic design",
+      "photoshop",
+      "illustrator",
+      "visual design",
+      "adobe"
+    ]
+  }
+}

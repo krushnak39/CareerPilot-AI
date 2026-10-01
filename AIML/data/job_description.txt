@@ -1,0 +1,13 @@
+Software Engineer
+
+Required Skills:
+
+Python
+FastAPI
+Docker
+Git
+AWS
+MongoDB
+SQL
+REST API
+Linux

@@ -23,6 +23,8 @@ const interviewRoutes =
 
 const activityRoutes =
   require("./routes/activity.routes");
+  const learningRoutes =
+  require("./routes/learning.routes");
 
 const {
   notFoundHandler,
@@ -109,6 +111,8 @@ app.use(
 app.use(
   "/api/activities",
   activityRoutes
+  "/api/learning",
+  learningRoutes
 );
 
 // ==========================
