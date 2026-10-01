@@ -113,6 +113,13 @@ const makePrimaryResume = async (req, res, next) => {
       userId: req.user.id,
     });
 
+    await createActivity({
+      userId: req.user.id,
+      type: "PRIMARY_RESUME_CHANGED",
+      title: "Primary resume changed",
+      description: resume.fileName,
+    });
+
     return res.status(200).json({
       success: true,
       message: "Primary resume updated successfully",
