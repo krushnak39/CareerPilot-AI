@@ -8,31 +8,33 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  fullName   String
-  email      String   @unique
-  password   String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  provider   String   @default("credentials")
-  githubId   String?  @unique
-  googleId   String?  @unique
-  linkedinId String?  @unique
+  id                   String            @id @default(cuid())
+  fullName             String
+  email                String            @unique
+  password             String?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  provider             String            @default("credentials")
+  githubId             String?           @unique
+  googleId             String?           @unique
+  linkedinId           String?           @unique
 
   resetPasswordToken   String?
   resetPasswordExpires DateTime?
 
-  resumes           Resume[]
-  profile            UserProfile?
-  careerPreference   CareerPreference?
-  jobApplications   JobApplication[]
-  interviewSessions  InterviewSession[]
+  resumes              Resume[]
+  profile              UserProfile?
+  careerPreference     CareerPreference?
+  jobApplications      JobApplication[]
+  interviewSessions    InterviewSession[]
 
-  learningProgress   LearningProgress[]
-  userSkills         UserSkill[]
-  skillGaps          SkillGap[]
-  activities         UserActivity[]
+  learningProgress     LearningProgress[]
+  userSkills           UserSkill[]
+  skillGaps            SkillGap[]
+  userActivities       UserActivity[]
+  activities           Activity[]
 }
+
 model UserProfile {
   id                   String   @id @default(cuid())
   userId               String   @unique
@@ -44,8 +46,8 @@ model UserProfile {
   graduationYear       Int?
   skills               String[] @default([])
   notificationsEnabled Boolean  @default(true)
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -99,8 +101,8 @@ model ResumeVersion {
 }
 
 model JobApplication {
-  id     String @id @default(cuid())
-  userId String
+  id          String    @id @default(cuid())
+  userId      String
 
   jobTitle    String
   company     String
@@ -111,29 +113,43 @@ model JobApplication {
   status      String    @default("SAVED")
   appliedDate DateTime?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model InterviewSession {
-  id     String @id @default(cuid())
-  userId String
+  id          String    @id @default(cuid())
+  userId      String
 
-  title   String
-  type    String?
-  company String?
-  role    String?
-  status  String  @default("PLANNED")
+  title       String
+  type        String?
+  company     String?
+  role        String?
+  status      String    @default("PLANNED")
 
   scheduledAt DateTime?
   notes       String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model Skill {

@@ -1,5 +1,5 @@
 const prisma = require("../config/prisma");
-
+const { createActivity } = require("../services/activity.service");
 // ==========================
 // GET PROFILE
 // ==========================
@@ -283,6 +283,13 @@ const updateProfile = async (
           };
         }
       );
+
+      await createActivity({
+        userId: req.user.id,
+        type: "PROFILE_UPDATED",
+        title: "Profile updated",
+        description: "Your profile information was updated",
+      });
 
     return res.status(200).json({
       success: true,

@@ -21,6 +21,8 @@ const jobRoutes =
 const interviewRoutes =
   require("./routes/interview.routes");
 
+const activityRoutes =
+  require("./routes/activity.routes");
   const learningRoutes =
   require("./routes/learning.routes");
 
@@ -48,6 +50,15 @@ app.use(
   express.urlencoded({
     extended: true,
   })
+);
+app.use(
+  "/uploads",
+  express.static(
+    require("path").join(
+      process.cwd(),
+      "uploads"
+    )
+  )
 );
 
 // ==========================
@@ -98,6 +109,8 @@ app.use(
 );
 
 app.use(
+  "/api/activities",
+  activityRoutes
   "/api/learning",
   learningRoutes
 );
