@@ -23,7 +23,8 @@ const interviewRoutes =
 
 const activityRoutes =
   require("./routes/activity.routes");
-  const learningRoutes =
+
+const learningRoutes =
   require("./routes/learning.routes");
 
 const {
@@ -51,6 +52,7 @@ app.use(
     extended: true,
   })
 );
+
 app.use(
   "/uploads",
   express.static(
@@ -111,6 +113,9 @@ app.use(
 app.use(
   "/api/activities",
   activityRoutes
+);
+
+app.use(
   "/api/learning",
   learningRoutes
 );
