@@ -27,6 +27,9 @@ const activityRoutes =
 const learningRoutes =
   require("./routes/learning.routes");
 
+const studyMaterialRoutes =
+  require("./routes/studyMaterial.routes");
+
 const {
   notFoundHandler,
   errorHandler,
@@ -118,6 +121,11 @@ app.use(
 app.use(
   "/api/learning",
   learningRoutes
+);
+
+app.use(
+  "/api/study-materials",
+  studyMaterialRoutes
 );
 
 // ==========================
