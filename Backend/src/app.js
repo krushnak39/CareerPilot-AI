@@ -1,6 +1,9 @@
 const express = require("express");
+
 const cors = require("cors");
+
 const helmet = require("helmet");
+
 const morgan = require("morgan");
 
 const authRoutes =
@@ -30,6 +33,9 @@ const learningRoutes =
 const studyMaterialRoutes =
   require("./routes/studyMaterial.routes");
 
+const learningRoadmapRoutes =
+  require("./routes/learningRoadmap.routes");
+
 const {
   notFoundHandler,
   errorHandler,
@@ -42,6 +48,7 @@ const app = express();
 // ==========================
 // MIDDLEWARE
 // ==========================
+
 app.use(cors());
 
 app.use(helmet());
@@ -69,6 +76,7 @@ app.use(
 // ==========================
 // HEALTH CHECK
 // ==========================
+
 app.get(
   "/api/health",
   (req, res) => {
@@ -83,6 +91,7 @@ app.get(
 // ==========================
 // ROUTES
 // ==========================
+
 app.use(
   "/api/auth",
   authRoutes
@@ -128,10 +137,16 @@ app.use(
   studyMaterialRoutes
 );
 
+app.use(
+  "/api/learning-roadmaps",
+  learningRoadmapRoutes
+);
+
 // ==========================
 // 404 HANDLER
 // MUST BE AFTER ROUTES
 // ==========================
+
 app.use(
   notFoundHandler
 );
@@ -140,6 +155,7 @@ app.use(
 // GLOBAL ERROR HANDLER
 // MUST BE LAST
 // ==========================
+
 app.use(
   errorHandler
 );
