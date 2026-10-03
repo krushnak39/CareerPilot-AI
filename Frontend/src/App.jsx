@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import StudyMaterials from "./pages/StudyMaterials";
 
 import {
   Routes,
@@ -143,6 +144,13 @@ function App() {
             <Learning />
           }
         />
+
+        <Route
+          path="/study-materials"
+          element={
+              <StudyMaterials />
+            }
+          />
 
         <Route
           path="/interview"

@@ -181,6 +181,25 @@ function Sidebar({
             Learning Assistant
           </NavLink>
 
+          {/* Study Materials */}
+          <NavLink
+            to="/study-materials"
+            onClick={() =>
+              setSidebarOpen(
+                false
+              )
+            }
+            className={
+              navItemClass
+            }
+          >
+            <BookOpen
+              size={20}
+            />
+
+            Study Materials
+          </NavLink>
+
           <NavLink
             to="/interview"
             onClick={() =>
