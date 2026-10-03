@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   FileText,
   BookOpen,
+  Map,
   Mic,
   BriefcaseBusiness,
   User,
@@ -198,6 +199,25 @@ function Sidebar({
             />
 
             Study Materials
+          </NavLink>
+
+          {/* Learning Roadmap */}
+          <NavLink
+            to="/learning-roadmap"
+            onClick={() =>
+              setSidebarOpen(
+                false
+              )
+            }
+            className={
+              navItemClass
+            }
+          >
+            <Map
+              size={20}
+            />
+
+            Learning Roadmap
           </NavLink>
 
           <NavLink

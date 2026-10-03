@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import StudyMaterials from "./pages/StudyMaterials";
+import LearningRoadmap from "./pages/LearningRoadmap";
 
 import {
   Routes,
@@ -150,6 +151,13 @@ function App() {
           element={
               <StudyMaterials />
             }
+          />
+
+          <Route
+            path="/learning-roadmap"
+            element={
+                <LearningRoadmap />
+              }
           />
 
         <Route
