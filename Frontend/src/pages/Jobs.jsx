@@ -16,6 +16,7 @@ import {
   X,
   Search,
   Filter,
+  ArrowUpDown,
 } from "lucide-react";
 
 import toast from "react-hot-toast";
@@ -30,45 +31,27 @@ import {
 import ConfirmModal from "../components/ConfirmModal";
 
 function Jobs() {
-  const [jobs, setJobs] =
-    useState([]);
+  const [jobs, setJobs] = useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [saving, setSaving] =
-    useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const [
-    deletingId,
-    setDeletingId,
-  ] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
-  const [
-    pendingDeleteJob,
-    setPendingDeleteJob,
-  ] = useState(null);
+  const [pendingDeleteJob, setPendingDeleteJob] = useState(null);
 
-  const [
-    editingId,
-    setEditingId,
-  ] = useState(null);
+  const [editingId, setEditingId] = useState(null);
 
-  const [
-    showForm,
-    setShowForm,
-  ] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
-  const [
-    statusFilter,
-    setStatusFilter,
-  ] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
+  const [sortOption, setSortOption] = useState("newest");
 
   const initialForm = {
     jobTitle: "",
@@ -80,8 +63,7 @@ function Jobs() {
     appliedDate: "",
   };
 
-  const [form, setForm] =
-    useState(initialForm);
+  const [form, setForm] = useState(initialForm);
 
   // ==========================
   // LOAD JOBS
@@ -91,17 +73,11 @@ function Jobs() {
       setLoading(true);
       setError("");
 
-      const response =
-        await getJobs();
+      const response = await getJobs();
 
-      setJobs(
-        response.data || []
-      );
+      setJobs(response.data || []);
     } catch (err) {
-      console.error(
-        "Fetch Jobs Error:",
-        err
-      );
+      console.error("Fetch Jobs Error:", err);
 
       const message =
         err.response?.data?.message ||
@@ -123,10 +99,7 @@ function Jobs() {
   // FORM CHANGE
   // ==========================
   const handleChange = (e) => {
-    const {
-      name,
-      value,
-    } = e.target;
+    const { name, value } = e.target;
 
     setForm((current) => ({
       ...current,
@@ -160,32 +133,23 @@ function Jobs() {
     setEditingId(job.id);
 
     setForm({
-      jobTitle:
-        job.jobTitle || "",
+      jobTitle: job.jobTitle || "",
 
-      company:
-        job.company || "",
+      company: job.company || "",
 
-      location:
-        job.location || "",
+      location: job.location || "",
 
-      jobType:
-        job.jobType || "",
+      jobType: job.jobType || "",
 
-      description:
-        job.description || "",
+      description: job.description || "",
 
-      status:
-        job.status || "SAVED",
+      status: job.status || "SAVED",
 
-      appliedDate:
-        job.appliedDate
-          ? new Date(
-              job.appliedDate
-            )
-              .toISOString()
-              .split("T")[0]
-          : "",
+      appliedDate: job.appliedDate
+        ? new Date(job.appliedDate)
+            .toISOString()
+            .split("T")[0]
+        : "",
     });
 
     setShowForm(true);
@@ -195,9 +159,7 @@ function Jobs() {
   // ==========================
   // SAVE JOB
   // ==========================
-  const handleSubmit = async (
-    e
-  ) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -218,44 +180,33 @@ function Jobs() {
       const payload = {
         ...form,
 
-        jobTitle:
-          form.jobTitle.trim(),
+        jobTitle: form.jobTitle.trim(),
 
-        company:
-          form.company.trim(),
+        company: form.company.trim(),
 
-        location:
-          form.location.trim(),
+        location: form.location.trim(),
 
-        jobType:
-          form.jobType.trim(),
+        jobType: form.jobType.trim(),
 
-        description:
-          form.description.trim(),
+        description: form.description.trim(),
 
-        appliedDate:
-          form.appliedDate ||
-          null,
+        appliedDate: form.appliedDate || null,
       };
 
       let response;
 
       if (editingId) {
-        response =
-          await updateJob(
-            editingId,
-            payload
-          );
+        response = await updateJob(
+          editingId,
+          payload
+        );
 
         toast.success(
           response.message ||
             "Job application updated successfully."
         );
       } else {
-        response =
-          await createJob(
-            payload
-          );
+        response = await createJob(payload);
 
         toast.success(
           response.message ||
@@ -267,10 +218,7 @@ function Jobs() {
 
       await fetchJobs();
     } catch (err) {
-      console.error(
-        "Save Job Error:",
-        err
-      );
+      console.error("Save Job Error:", err);
 
       toast.error(
         err.response?.data?.message ||
@@ -284,40 +232,38 @@ function Jobs() {
   // ==========================
   // QUICK STATUS UPDATE
   // ==========================
-  const handleStatusChange =
-    async (
-      job,
-      status
-    ) => {
-      try {
-        setError("");
+  const handleStatusChange = async (
+    job,
+    status
+  ) => {
+    try {
+      setError("");
 
-        const response =
-          await updateJob(
-            job.id,
-            {
-              status,
-            }
-          );
+      const response = await updateJob(
+        job.id,
+        {
+          status,
+        }
+      );
 
-        toast.success(
-          response.message ||
-            "Application status updated."
-        );
+      toast.success(
+        response.message ||
+          "Application status updated."
+      );
 
-        await fetchJobs();
-      } catch (err) {
-        console.error(
-          "Status Update Error:",
-          err
-        );
+      await fetchJobs();
+    } catch (err) {
+      console.error(
+        "Status Update Error:",
+        err
+      );
 
-        toast.error(
-          err.response?.data?.message ||
-            "Unable to update status."
-        );
-      }
-    };
+      toast.error(
+        err.response?.data?.message ||
+          "Unable to update status."
+      );
+    }
+  };
 
   // ==========================
   // OPEN DELETE MODAL
@@ -341,95 +287,154 @@ function Jobs() {
   // ==========================
   // CONFIRM DELETE
   // ==========================
-  const confirmDelete =
-    async () => {
-      if (!pendingDeleteJob) {
-        return;
+  const confirmDelete = async () => {
+    if (!pendingDeleteJob) {
+      return;
+    }
+
+    try {
+      setDeletingId(pendingDeleteJob.id);
+
+      setError("");
+
+      const response = await deleteJob(
+        pendingDeleteJob.id
+      );
+
+      toast.success(
+        response.message ||
+          "Job application deleted successfully."
+      );
+
+      setPendingDeleteJob(null);
+
+      await fetchJobs();
+    } catch (err) {
+      console.error(
+        "Delete Job Error:",
+        err
+      );
+
+      toast.error(
+        err.response?.data?.message ||
+          "Unable to delete job application."
+      );
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  // ==========================
+  // SEARCH + FILTER + SORT
+  // ==========================
+  const filteredJobs = useMemo(() => {
+    const query = search
+      .trim()
+      .toLowerCase();
+
+    const result = jobs.filter((job) => {
+      const matchesSearch =
+        !query ||
+        job.jobTitle
+          ?.toLowerCase()
+          .includes(query) ||
+        job.company
+          ?.toLowerCase()
+          .includes(query) ||
+        job.location
+          ?.toLowerCase()
+          .includes(query);
+
+      const matchesStatus =
+        statusFilter === "ALL" ||
+        job.status === statusFilter;
+
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
+    });
+
+    const getTimestamp = (value) => {
+      if (!value) {
+        return 0;
       }
 
-      try {
-        setDeletingId(
-          pendingDeleteJob.id
-        );
+      const timestamp =
+        new Date(value).getTime();
 
-        setError("");
-
-        const response =
-          await deleteJob(
-            pendingDeleteJob.id
-          );
-
-        toast.success(
-          response.message ||
-            "Job application deleted successfully."
-        );
-
-        setPendingDeleteJob(null);
-
-        await fetchJobs();
-      } catch (err) {
-        console.error(
-          "Delete Job Error:",
-          err
-        );
-
-        toast.error(
-          err.response?.data?.message ||
-            "Unable to delete job application."
-        );
-      } finally {
-        setDeletingId(null);
-      }
+      return Number.isNaN(timestamp)
+        ? 0
+        : timestamp;
     };
 
-  // ==========================
-  // FILTER JOBS
-  // ==========================
-  const filteredJobs =
-    useMemo(() => {
-      const query =
-        search
-          .trim()
-          .toLowerCase();
-
-      return jobs.filter(
-        (job) => {
-          const matchesSearch =
-            !query ||
-            job.jobTitle
-              ?.toLowerCase()
-              .includes(query) ||
-            job.company
-              ?.toLowerCase()
-              .includes(query) ||
-            job.location
-              ?.toLowerCase()
-              .includes(query);
-
-          const matchesStatus =
-            statusFilter ===
-              "ALL" ||
-            job.status ===
-              statusFilter;
-
+    return [...result].sort((a, b) => {
+      switch (sortOption) {
+        case "oldest":
           return (
-            matchesSearch &&
-            matchesStatus
+            getTimestamp(a.createdAt) -
+            getTimestamp(b.createdAt)
           );
-        }
-      );
-    }, [
-      jobs,
-      search,
-      statusFilter,
-    ]);
+
+        case "title-asc":
+          return (
+            a.jobTitle || ""
+          ).localeCompare(
+            b.jobTitle || ""
+          );
+
+        case "title-desc":
+          return (
+            b.jobTitle || ""
+          ).localeCompare(
+            a.jobTitle || ""
+          );
+
+        case "company-asc":
+          return (
+            a.company || ""
+          ).localeCompare(
+            b.company || ""
+          );
+
+        case "company-desc":
+          return (
+            b.company || ""
+          ).localeCompare(
+            a.company || ""
+          );
+
+        case "applied-newest":
+          return (
+            getTimestamp(b.appliedDate) -
+            getTimestamp(a.appliedDate)
+          );
+
+        case "applied-oldest":
+          return (
+            getTimestamp(a.appliedDate) -
+            getTimestamp(b.appliedDate)
+          );
+
+        case "newest":
+        default:
+          return (
+            getTimestamp(b.createdAt) -
+            getTimestamp(a.createdAt)
+          );
+      }
+    });
+  }, [
+    jobs,
+    search,
+    statusFilter,
+    sortOption,
+  ]);
 
   // ==========================
   // STATUS STYLE
   // ==========================
-  const getStatusStyle = (
-    status
-  ) => {
+  const getStatusStyle = (status) => {
     switch (status) {
       case "APPLIED":
         return "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20";
@@ -471,9 +476,7 @@ function Jobs() {
 
           <button
             type="button"
-            onClick={
-              openCreateForm
-            }
+            onClick={openCreateForm}
             className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold shadow-lg shadow-blue-500/20 transition"
           >
             <Plus size={17} />
@@ -516,9 +519,7 @@ function Jobs() {
 
               <button
                 type="button"
-                onClick={
-                  resetForm
-                }
+                onClick={resetForm}
                 className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
               >
                 <X size={18} />
@@ -527,9 +528,7 @@ function Jobs() {
             </div>
 
             <form
-              onSubmit={
-                handleSubmit
-              }
+              onSubmit={handleSubmit}
               className="grid sm:grid-cols-2 gap-4"
             >
 
@@ -540,12 +539,8 @@ function Jobs() {
 
                 <input
                   name="jobTitle"
-                  value={
-                    form.jobTitle
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={form.jobTitle}
+                  onChange={handleChange}
                   placeholder="Backend Developer"
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                 />
@@ -558,12 +553,8 @@ function Jobs() {
 
                 <input
                   name="company"
-                  value={
-                    form.company
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={form.company}
+                  onChange={handleChange}
                   placeholder="Infosys"
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                 />
@@ -576,12 +567,8 @@ function Jobs() {
 
                 <input
                   name="location"
-                  value={
-                    form.location
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={form.location}
+                  onChange={handleChange}
                   placeholder="Pune"
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                 />
@@ -594,12 +581,8 @@ function Jobs() {
 
                 <select
                   name="jobType"
-                  value={
-                    form.jobType
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={form.jobType}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500"
                 >
                   <option value="">
@@ -631,12 +614,8 @@ function Jobs() {
 
                 <select
                   name="status"
-                  value={
-                    form.status
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={form.status}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500"
                 >
                   <option value="SAVED">
@@ -669,12 +648,8 @@ function Jobs() {
                 <input
                   type="date"
                   name="appliedDate"
-                  value={
-                    form.appliedDate
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={form.appliedDate}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500"
                 />
               </div>
@@ -686,12 +661,8 @@ function Jobs() {
 
                 <textarea
                   name="description"
-                  value={
-                    form.description
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={form.description}
+                  onChange={handleChange}
                   rows={4}
                   placeholder="Paste or write important job details..."
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500 resize-none"
@@ -702,9 +673,7 @@ function Jobs() {
 
                 <button
                   type="button"
-                  onClick={
-                    resetForm
-                  }
+                  onClick={resetForm}
                   className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
                 >
                   Cancel
@@ -712,9 +681,7 @@ function Jobs() {
 
                 <button
                   type="submit"
-                  disabled={
-                    saving
-                  }
+                  disabled={saving}
                   className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition disabled:opacity-50"
                 >
 
@@ -739,12 +706,13 @@ function Jobs() {
         )}
 
         {/* ==========================
-            SEARCH + FILTER
+            SEARCH + FILTER + SORT
         ========================== */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-sm">
 
-          <div className="grid sm:grid-cols-[1fr_auto] gap-3">
+          <div className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
 
+            {/* SEARCH */}
             <div className="relative">
 
               <Search
@@ -754,13 +722,9 @@ function Jobs() {
 
               <input
                 type="text"
-                value={
-                  search
-                }
+                value={search}
                 onChange={(e) =>
-                  setSearch(
-                    e.target.value
-                  )
+                  setSearch(e.target.value)
                 }
                 placeholder="Search by role, company or location..."
                 className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500"
@@ -768,6 +732,7 @@ function Jobs() {
 
             </div>
 
+            {/* STATUS FILTER */}
             <div className="relative">
 
               <Filter
@@ -776,9 +741,7 @@ function Jobs() {
               />
 
               <select
-                value={
-                  statusFilter
-                }
+                value={statusFilter}
                 onChange={(e) =>
                   setStatusFilter(
                     e.target.value
@@ -808,6 +771,58 @@ function Jobs() {
 
                 <option value="REJECTED">
                   Rejected
+                </option>
+              </select>
+
+            </div>
+
+            {/* SORT */}
+            <div className="relative">
+
+              <ArrowUpDown
+                size={16}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+              />
+
+              <select
+                value={sortOption}
+                onChange={(e) =>
+                  setSortOption(
+                    e.target.value
+                  )
+                }
+                className="pl-9 pr-8 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-700 dark:text-slate-200 outline-none"
+              >
+                <option value="newest">
+                  Newest Added
+                </option>
+
+                <option value="oldest">
+                  Oldest Added
+                </option>
+
+                <option value="title-asc">
+                  Job Title A-Z
+                </option>
+
+                <option value="title-desc">
+                  Job Title Z-A
+                </option>
+
+                <option value="company-asc">
+                  Company A-Z
+                </option>
+
+                <option value="company-desc">
+                  Company Z-A
+                </option>
+
+                <option value="applied-newest">
+                  Applied Date Newest
+                </option>
+
+                <option value="applied-oldest">
+                  Applied Date Oldest
                 </option>
               </select>
 
@@ -857,8 +872,7 @@ function Jobs() {
           )}
 
           {!loading &&
-            filteredJobs.length ===
-              0 && (
+            filteredJobs.length === 0 && (
               <div className="border border-dashed border-slate-200 dark:border-slate-700 rounded-2xl p-10 text-center">
 
                 <BriefcaseBusiness
@@ -879,16 +893,13 @@ function Jobs() {
             )}
 
           {!loading &&
-            filteredJobs.length >
-              0 && (
+            filteredJobs.length > 0 && (
               <div className="space-y-4">
 
                 {filteredJobs.map(
                   (job) => (
                     <div
-                      key={
-                        job.id
-                      }
+                      key={job.id}
                       className="rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 p-4"
                     >
 
@@ -983,9 +994,7 @@ function Jobs() {
                         <div className="flex flex-wrap items-center gap-2">
 
                           <select
-                            value={
-                              job.status
-                            }
+                            value={job.status}
                             onChange={(e) =>
                               handleStatusChange(
                                 job,
@@ -1018,9 +1027,7 @@ function Jobs() {
                           <button
                             type="button"
                             onClick={() =>
-                              openEditForm(
-                                job
-                              )
+                              openEditForm(job)
                             }
                             className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition"
                           >
@@ -1034,9 +1041,7 @@ function Jobs() {
                           <button
                             type="button"
                             onClick={() =>
-                              requestDelete(
-                                job
-                              )
+                              requestDelete(job)
                             }
                             disabled={
                               deletingId ===
@@ -1083,11 +1088,9 @@ function Jobs() {
           CONFIRM DELETE MODAL
       ========================== */}
       <ConfirmModal
-        open={
-          Boolean(
-            pendingDeleteJob
-          )
-        }
+        open={Boolean(
+          pendingDeleteJob
+        )}
         title="Delete Job Application?"
         message={
           pendingDeleteJob
@@ -1096,17 +1099,9 @@ function Jobs() {
         }
         confirmText="Delete Job"
         cancelText="Cancel"
-        loading={
-          Boolean(
-            deletingId
-          )
-        }
-        onConfirm={
-          confirmDelete
-        }
-        onCancel={
-          cancelDelete
-        }
+        loading={Boolean(deletingId)}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
       />
     </>
   );

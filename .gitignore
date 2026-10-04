@@ -4,3 +4,4 @@
 .venv/
 venv/
 .env
+Backend/private_uploads/

@@ -1,10 +1,19 @@
-import { useEffect, useState } from "react";
-import { CheckCircle2, Circle, ChevronDown, ChevronRight, Map } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  CheckCircle2,
+  Circle,
+  ChevronDown,
+  ChevronRight,
+  Map,
+  Search,
+  Filter,
+  ArrowUpDown,
+} from "lucide-react";
 import toast from "react-hot-toast";
 
 import {
   getLearningRoadmaps,
-  updateRoadmapTopic,
+  updateLearningRoadmapTopic,
 } from "../api/learningRoadmaps";
 
 const LearningRoadmap = () => {
@@ -12,6 +21,11 @@ const LearningRoadmap = () => {
   const [loading, setLoading] = useState(true);
   const [expandedRoadmaps, setExpandedRoadmaps] = useState({});
   const [updatingTopicId, setUpdatingTopicId] = useState(null);
+
+  // Task 7: Search / Filter / Sort
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [sortOption, setSortOption] = useState("newest");
 
   const fetchRoadmaps = async () => {
     try {
@@ -51,9 +65,12 @@ const LearningRoadmap = () => {
     try {
       setUpdatingTopicId(topic.id);
 
-      const response = await updateRoadmapTopic(topic.id, {
-        completed: !topic.completed,
-      });
+      const response = await updateLearningRoadmapTopic(
+        topic.id,
+        {
+          completed: !topic.completed,
+        }
+      );
 
       if (!response?.success) {
         throw new Error(
@@ -98,7 +115,9 @@ const LearningRoadmap = () => {
 
   const getRoadmapProgress = (roadmap) => {
     const topics =
-      roadmap.modules?.flatMap((module) => module.topics || []) || [];
+      roadmap.modules?.flatMap(
+        (module) => module.topics || []
+      ) || [];
 
     if (topics.length === 0) {
       return 0;
@@ -108,13 +127,16 @@ const LearningRoadmap = () => {
       (topic) => topic.completed
     ).length;
 
-    return Math.round((completedTopics / topics.length) * 100);
+    return Math.round(
+      (completedTopics / topics.length) * 100
+    );
   };
 
   const getTopicCount = (roadmap) => {
     return (
       roadmap.modules?.reduce(
-        (total, module) => total + (module.topics?.length || 0),
+        (total, module) =>
+          total + (module.topics?.length || 0),
         0
       ) || 0
     );
@@ -132,6 +154,83 @@ const LearningRoadmap = () => {
       ) || 0
     );
   };
+
+  // Task 7: Search, Filter and Sort
+  const filteredRoadmaps = useMemo(() => {
+    const searchValue = search.trim().toLowerCase();
+
+    const filtered = roadmaps.filter((roadmap) => {
+      const progress = getRoadmapProgress(roadmap);
+
+      // Search roadmap, role, description,
+      // module and topic data
+      const searchableText = [
+        roadmap.title,
+        roadmap.description,
+        roadmap.role,
+        ...(roadmap.modules || []).flatMap((module) => [
+          module.title,
+          module.description,
+          ...(module.topics || []).flatMap((topic) => [
+            topic.title,
+            topic.description,
+          ]),
+        ]),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      const matchesSearch =
+        !searchValue ||
+        searchableText.includes(searchValue);
+
+      // Status filter
+      let matchesStatus = true;
+
+      if (statusFilter === "COMPLETED") {
+        matchesStatus = progress === 100;
+      } else if (statusFilter === "IN_PROGRESS") {
+        matchesStatus = progress > 0 && progress < 100;
+      } else if (statusFilter === "NOT_STARTED") {
+        matchesStatus = progress === 0;
+      }
+
+      return matchesSearch && matchesStatus;
+    });
+
+    // Sort
+    return [...filtered].sort((a, b) => {
+      const titleA = (a.title || "").toLowerCase();
+      const titleB = (b.title || "").toLowerCase();
+
+      const dateA = new Date(
+        a.createdAt || 0
+      ).getTime();
+
+      const dateB = new Date(
+        b.createdAt || 0
+      ).getTime();
+
+      if (sortOption === "newest") {
+        return dateB - dateA;
+      }
+
+      if (sortOption === "oldest") {
+        return dateA - dateB;
+      }
+
+      if (sortOption === "title-asc") {
+        return titleA.localeCompare(titleB);
+      }
+
+      if (sortOption === "title-desc") {
+        return titleB.localeCompare(titleA);
+      }
+
+      return 0;
+    });
+  }, [roadmaps, search, statusFilter, sortOption]);
 
   if (loading) {
     return (
@@ -151,6 +250,7 @@ const LearningRoadmap = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-4 dark:bg-gray-900 sm:p-6">
       <div className="mx-auto max-w-6xl">
+
         {/* Header */}
         <div className="mb-6 overflow-hidden rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 p-6 text-white shadow-lg sm:p-8">
           <div className="flex items-start gap-4">
@@ -164,12 +264,102 @@ const LearningRoadmap = () => {
               </h1>
 
               <p className="mt-2 max-w-2xl text-sm text-blue-100 sm:text-base">
-                Track your learning journey, complete topics, and
-                monitor your progress step by step.
+                Track your learning journey, complete topics,
+                and monitor your progress step by step.
               </p>
             </div>
           </div>
         </div>
+
+        {/* Search / Filter / Sort */}
+        {roadmaps.length > 0 && (
+          <div className="mb-6 rounded-2xl bg-white p-4 shadow-sm dark:bg-gray-800 sm:p-5">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+
+              {/* Search */}
+              <div className="relative">
+                <Search
+                  size={18}
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(event) =>
+                    setSearch(event.target.value)
+                  }
+                  placeholder="Search roadmaps, modules, topics..."
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm text-gray-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
+                />
+              </div>
+
+              {/* Status Filter */}
+              <div className="relative">
+                <Filter
+                  size={18}
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+
+                <select
+                  value={statusFilter}
+                  onChange={(event) =>
+                    setStatusFilter(event.target.value)
+                  }
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-8 text-sm text-gray-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
+                >
+                  <option value="ALL">
+                    All Roadmaps
+                  </option>
+
+                  <option value="IN_PROGRESS">
+                    In Progress
+                  </option>
+
+                  <option value="COMPLETED">
+                    Completed
+                  </option>
+
+                  <option value="NOT_STARTED">
+                    Not Started
+                  </option>
+                </select>
+              </div>
+
+              {/* Sort */}
+              <div className="relative">
+                <ArrowUpDown
+                  size={18}
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+
+                <select
+                  value={sortOption}
+                  onChange={(event) =>
+                    setSortOption(event.target.value)
+                  }
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-8 text-sm text-gray-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
+                >
+                  <option value="newest">
+                    Newest First
+                  </option>
+
+                  <option value="oldest">
+                    Oldest First
+                  </option>
+
+                  <option value="title-asc">
+                    Title A-Z
+                  </option>
+
+                  <option value="title-desc">
+                    Title Z-A
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Empty State */}
         {roadmaps.length === 0 ? (
@@ -187,9 +377,36 @@ const LearningRoadmap = () => {
               Your learning roadmaps will appear here.
             </p>
           </div>
+        ) : filteredRoadmaps.length === 0 ? (
+          /* No Search Results */
+          <div className="rounded-2xl bg-white p-10 text-center shadow-sm dark:bg-gray-800">
+            <Search
+              size={48}
+              className="mx-auto mb-4 text-gray-400"
+            />
+
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+              No matching roadmaps
+            </h2>
+
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              Try changing your search or filter.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setStatusFilter("ALL");
+              }}
+              className="mt-5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+            >
+              Clear Search & Filter
+            </button>
+          </div>
         ) : (
           <div className="space-y-5">
-            {roadmaps.map((roadmap) => {
+            {filteredRoadmaps.map((roadmap) => {
               const progress = getRoadmapProgress(roadmap);
               const totalTopics = getTopicCount(roadmap);
               const completedTopics =
@@ -203,13 +420,17 @@ const LearningRoadmap = () => {
                   key={roadmap.id}
                   className="overflow-hidden rounded-2xl bg-white shadow-sm dark:bg-gray-800"
                 >
+
                   {/* Roadmap Header */}
                   <button
                     type="button"
-                    onClick={() => toggleRoadmap(roadmap.id)}
+                    onClick={() =>
+                      toggleRoadmap(roadmap.id)
+                    }
                     className="w-full p-5 text-left transition hover:bg-gray-50 dark:hover:bg-gray-750 sm:p-6"
                   >
                     <div className="flex items-start justify-between gap-4">
+
                       <div className="flex min-w-0 items-start gap-3">
                         <div className="mt-1 text-gray-500 dark:text-gray-400">
                           {isExpanded ? (
@@ -272,14 +493,21 @@ const LearningRoadmap = () => {
                       ) : (
                         <div className="space-y-4 pt-5">
                           {[...(roadmap.modules || [])]
-                            .sort((a, b) => a.order - b.order)
+                            .sort(
+                              (a, b) =>
+                                (a.order || 0) -
+                                (b.order || 0)
+                            )
                             .map((module, moduleIndex) => (
                               <div
                                 key={module.id}
                                 className="rounded-xl border border-gray-200 dark:border-gray-700"
                               >
+
+                                {/* Module */}
                                 <div className="bg-gray-50 p-4 dark:bg-gray-750">
                                   <div className="flex items-start gap-3">
+
                                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
                                       {moduleIndex + 1}
                                     </div>
@@ -295,6 +523,7 @@ const LearningRoadmap = () => {
                                         </p>
                                       )}
                                     </div>
+
                                   </div>
                                 </div>
 
@@ -308,14 +537,17 @@ const LearningRoadmap = () => {
                                     [...(module.topics || [])]
                                       .sort(
                                         (a, b) =>
-                                          a.order - b.order
+                                          (a.order || 0) -
+                                          (b.order || 0)
                                       )
                                       .map((topic) => (
                                         <button
                                           key={topic.id}
                                           type="button"
                                           onClick={() =>
-                                            handleTopicToggle(topic)
+                                            handleTopicToggle(
+                                              topic
+                                            )
                                           }
                                           disabled={
                                             updatingTopicId ===

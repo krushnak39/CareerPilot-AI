@@ -8,18 +8,26 @@ export const getLearningRoadmaps = async () => {
 
 // Get one learning roadmap
 export const getLearningRoadmap = async (roadmapId) => {
-  const response = await api.get(`/learning-roadmaps/${roadmapId}`);
+  const response = await api.get(
+    `/learning-roadmaps/${roadmapId}`
+  );
   return response.data;
 };
 
 // Create a learning roadmap
 export const createLearningRoadmap = async (roadmapData) => {
-  const response = await api.post("/learning-roadmaps", roadmapData);
+  const response = await api.post(
+    "/learning-roadmaps",
+    roadmapData
+  );
   return response.data;
 };
 
 // Update a learning roadmap
-export const updateLearningRoadmap = async (roadmapId, roadmapData) => {
+export const updateLearningRoadmap = async (
+  roadmapId,
+  roadmapData
+) => {
   const response = await api.put(
     `/learning-roadmaps/${roadmapId}`,
     roadmapData
@@ -29,12 +37,17 @@ export const updateLearningRoadmap = async (roadmapId, roadmapData) => {
 
 // Delete a learning roadmap
 export const deleteLearningRoadmap = async (roadmapId) => {
-  const response = await api.delete(`/learning-roadmaps/${roadmapId}`);
+  const response = await api.delete(
+    `/learning-roadmaps/${roadmapId}`
+  );
   return response.data;
 };
 
 // Create a module inside a roadmap
-export const createRoadmapModule = async (roadmapId, moduleData) => {
+export const createRoadmapModule = async (
+  roadmapId,
+  moduleData
+) => {
   const response = await api.post(
     `/learning-roadmaps/${roadmapId}/modules`,
     moduleData
@@ -43,7 +56,10 @@ export const createRoadmapModule = async (roadmapId, moduleData) => {
 };
 
 // Update a roadmap module
-export const updateRoadmapModule = async (moduleId, moduleData) => {
+export const updateRoadmapModule = async (
+  moduleId,
+  moduleData
+) => {
   const response = await api.put(
     `/learning-roadmaps/modules/${moduleId}`,
     moduleData
@@ -60,7 +76,10 @@ export const deleteRoadmapModule = async (moduleId) => {
 };
 
 // Create a topic inside a module
-export const createRoadmapTopic = async (moduleId, topicData) => {
+export const createRoadmapTopic = async (
+  moduleId,
+  topicData
+) => {
   const response = await api.post(
     `/learning-roadmaps/modules/${moduleId}/topics`,
     topicData
@@ -69,7 +88,10 @@ export const createRoadmapTopic = async (moduleId, topicData) => {
 };
 
 // Update a roadmap topic
-export const updateRoadmapTopic = async (topicId, topicData) => {
+export const updateLearningRoadmapTopic = async (
+  topicId,
+  topicData
+) => {
   const response = await api.put(
     `/learning-roadmaps/topics/${topicId}`,
     topicData
