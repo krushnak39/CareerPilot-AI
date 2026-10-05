@@ -232,20 +232,113 @@ const LearningRoadmap = () => {
     });
   }, [roadmaps, search, statusFilter, sortOption]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-4 dark:bg-gray-900 sm:p-6">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-6 h-32 animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-800" />
+ if (loading) {
+  return (
+    <div className="min-h-screen bg-gray-50 p-4 dark:bg-gray-900 sm:p-6">
+      <div className="mx-auto max-w-6xl">
 
-          <div className="space-y-4">
-            <div className="h-40 animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-800" />
-            <div className="h-40 animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-800" />
+        {/* Header Skeleton */}
+        <div className="mb-6 animate-pulse overflow-hidden rounded-2xl bg-gray-200 p-6 dark:bg-gray-800 sm:p-8">
+          <div className="flex items-start gap-4">
+            <div className="h-14 w-14 shrink-0 rounded-xl bg-gray-300 dark:bg-gray-700" />
+
+            <div className="flex-1 space-y-3">
+              <div className="h-7 w-56 rounded bg-gray-300 dark:bg-gray-700" />
+
+              <div className="h-4 w-full max-w-2xl rounded bg-gray-300 dark:bg-gray-700" />
+
+              <div className="h-4 w-3/4 max-w-xl rounded bg-gray-300 dark:bg-gray-700" />
+            </div>
           </div>
         </div>
+
+        {/* Roadmap Skeletons */}
+        <div className="space-y-5">
+          {[1, 2].map((item) => (
+            <div
+              key={item}
+              className="animate-pulse overflow-hidden rounded-2xl bg-white shadow-sm dark:bg-gray-800"
+            >
+              {/* Roadmap Header */}
+              <div className="p-5 sm:p-6">
+                <div className="flex items-start justify-between gap-4">
+
+                  <div className="flex min-w-0 flex-1 items-start gap-3">
+                    <div className="mt-1 h-5 w-5 shrink-0 rounded bg-gray-200 dark:bg-gray-700" />
+
+                    <div className="min-w-0 flex-1 space-y-3">
+                      <div className="h-6 w-64 rounded bg-gray-200 dark:bg-gray-700" />
+
+                      <div className="h-4 w-full max-w-xl rounded bg-gray-200 dark:bg-gray-700" />
+
+                      <div className="h-6 w-32 rounded-full bg-gray-200 dark:bg-gray-700" />
+                    </div>
+                  </div>
+
+                  <div className="shrink-0 space-y-2">
+                    <div className="ml-auto h-7 w-14 rounded bg-gray-200 dark:bg-gray-700" />
+                    <div className="h-3 w-20 rounded bg-gray-200 dark:bg-gray-700" />
+                  </div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="mt-5 h-2 rounded-full bg-gray-200 dark:bg-gray-700" />
+              </div>
+
+              {/* Modules */}
+              <div className="border-t border-gray-100 p-5 dark:border-gray-700 sm:p-6">
+                <div className="space-y-4">
+
+                  {[1, 2].map((module) => (
+                    <div
+                      key={module}
+                      className="rounded-xl border border-gray-200 dark:border-gray-700"
+                    >
+                      {/* Module */}
+                      <div className="bg-gray-50 p-4 dark:bg-gray-750">
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 shrink-0 rounded-full bg-gray-200 dark:bg-gray-700" />
+
+                          <div className="space-y-2">
+                            <div className="h-4 w-40 rounded bg-gray-200 dark:bg-gray-700" />
+                            <div className="h-3 w-56 rounded bg-gray-200 dark:bg-gray-700" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Topics */}
+                      <div className="space-y-4 p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="h-5 w-5 shrink-0 rounded-full bg-gray-200 dark:bg-gray-700" />
+
+                          <div className="flex-1 space-y-2">
+                            <div className="h-4 w-48 rounded bg-gray-200 dark:bg-gray-700" />
+                            <div className="h-3 w-72 max-w-full rounded bg-gray-200 dark:bg-gray-700" />
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className="h-5 w-5 shrink-0 rounded-full bg-gray-200 dark:bg-gray-700" />
+
+                          <div className="flex-1 space-y-2">
+                            <div className="h-4 w-56 rounded bg-gray-200 dark:bg-gray-700" />
+                            <div className="h-3 w-64 max-w-full rounded bg-gray-200 dark:bg-gray-700" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 dark:bg-gray-900 sm:p-6">

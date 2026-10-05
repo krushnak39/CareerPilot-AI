@@ -32,6 +32,43 @@ import {
   deleteStudyMaterial,
 } from "../api/studyMaterials";
 
+function StudyMaterialSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {[1, 2, 3, 4].map((item) => (
+        <div
+          key={item}
+          className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm animate-pulse"
+        >
+          <div className="flex items-start gap-4">
+            <div className="shrink-0 w-12 h-12 rounded-2xl bg-slate-200 dark:bg-slate-700" />
+
+            <div className="min-w-0 flex-1 space-y-3">
+              <div className="h-4 w-40 bg-slate-200 dark:bg-slate-700 rounded" />
+
+              <div className="h-3 w-52 bg-slate-200 dark:bg-slate-700 rounded" />
+
+              <div className="flex flex-wrap gap-3">
+                <div className="h-3 w-16 bg-slate-200 dark:bg-slate-700 rounded" />
+                <div className="h-3 w-12 bg-slate-200 dark:bg-slate-700 rounded" />
+                <div className="h-3 w-20 bg-slate-200 dark:bg-slate-700 rounded" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-5">
+            <div className="h-8 w-16 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+            <div className="h-8 w-24 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+            <div className="h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+
+
 function StudyMaterials() {
   const [materials, setMaterials] = useState([]);
 
@@ -828,7 +865,9 @@ function StudyMaterials() {
         ========================== */}
 
         {loading ? (
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-10 border border-slate-200 dark:border-slate-800 text-center">
+          <StudyMaterialSkeleton />
+          ) : materials.length === 0 ? (
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-10 border border-slate-200 dark:border-slate-800 text-center">
 
             <LoaderCircle
               size={30}

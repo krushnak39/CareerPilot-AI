@@ -41,6 +41,41 @@ import {
 
 import ConfirmModal from "../components/ConfirmModal";
 
+function ResumeSkeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3].map((item) => (
+        <div
+          key={item}
+          className="rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 p-4 animate-pulse"
+        >
+          <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-4">
+            <div className="flex items-start gap-3 min-w-0 flex-1">
+              <div className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0" />
+
+              <div className="flex-1 space-y-3">
+                <div className="h-4 w-48 bg-slate-200 dark:bg-slate-700 rounded" />
+
+                <div className="flex gap-3">
+                  <div className="h-3 w-20 bg-slate-200 dark:bg-slate-700 rounded" />
+                  <div className="h-3 w-24 bg-slate-200 dark:bg-slate-700 rounded" />
+                  <div className="h-3 w-32 bg-slate-200 dark:bg-slate-700 rounded" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <div className="h-9 w-24 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+              <div className="h-9 w-20 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+              <div className="h-9 w-20 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function Resume() {
   const [selectedFile, setSelectedFile] =
     useState(null);
@@ -1217,20 +1252,7 @@ function Resume() {
 
           </div>
 
-          {loadingResumes && (
-            <div className="flex items-center justify-center gap-2 py-10 text-slate-400">
-
-              <LoaderCircle
-                size={18}
-                className="animate-spin"
-              />
-
-              <span className="text-xs font-semibold">
-                Loading resumes...
-              </span>
-
-            </div>
-          )}
+          {loadingResumes && <ResumeSkeleton />}
 
           {!loadingResumes &&
             resumes.length ===
