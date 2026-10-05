@@ -921,6 +921,89 @@ const unlinkLinkedinUser =
   };
 
 // ==========================
+// SET PASSWORD
+// ==========================
+// Used by social-login users
+// who currently do not have
+// an email/password login.
+const setPasswordUser =
+  async ({
+    userId,
+    newPassword,
+  }) => {
+    if (!newPassword) {
+      throw new Error(
+        "New password is required"
+      );
+    }
+
+    if (
+      newPassword.length < 8
+    ) {
+      throw new Error(
+        "New password must be at least 8 characters long"
+      );
+    }
+
+    if (
+      !/[A-Za-z]/.test(
+        newPassword
+      ) ||
+      !/[0-9]/.test(
+        newPassword
+      )
+    ) {
+      throw new Error(
+        "New password must contain at least one letter and one number"
+      );
+    }
+
+    const user =
+      await prisma.user.findUnique({
+        where: {
+          id:
+            userId,
+        },
+      });
+
+    if (!user) {
+      throw new Error(
+        "User not found"
+      );
+    }
+
+    // Do not allow this endpoint
+    // to overwrite an existing password.
+    if (user.password) {
+      throw new Error(
+        "Password already exists. Use Change Password instead."
+      );
+    }
+
+    const hashedPassword =
+      await hashPassword(
+        newPassword
+      );
+
+    await prisma.user.update({
+      where: {
+        id:
+          userId,
+      },
+
+      data: {
+        password:
+          hashedPassword,
+      },
+    });
+
+    return {
+      success:
+        true,
+    };
+  };
+
+// ==========================
 // CHANGE PASSWORD
 // ==========================
 const changePasswordUser =
@@ -1239,6 +1322,7 @@ module.exports = {
   linkedinLoginUser,
   unlinkGoogleUser,
   unlinkLinkedinUser,
+  setPasswordUser,
   changePasswordUser,
   forgotPasswordUser,
   resetPasswordUser,

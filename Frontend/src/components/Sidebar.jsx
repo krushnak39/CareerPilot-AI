@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   FileText,
   BookOpen,
+  Map,
   Mic,
   BriefcaseBusiness,
   User,
@@ -179,6 +180,44 @@ function Sidebar({
             />
 
             Learning Assistant
+          </NavLink>
+
+          {/* Study Materials */}
+          <NavLink
+            to="/study-materials"
+            onClick={() =>
+              setSidebarOpen(
+                false
+              )
+            }
+            className={
+              navItemClass
+            }
+          >
+            <BookOpen
+              size={20}
+            />
+
+            Study Materials
+          </NavLink>
+
+          {/* Learning Roadmap */}
+          <NavLink
+            to="/learning-roadmap"
+            onClick={() =>
+              setSidebarOpen(
+                false
+              )
+            }
+            className={
+              navItemClass
+            }
+          >
+            <Map
+              size={20}
+            />
+
+            Learning Roadmap
           </NavLink>
 
           <NavLink

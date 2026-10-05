@@ -16,6 +16,7 @@ import {
   Search,
   Filter,
   Clock3,
+  ArrowUpDown,
 } from "lucide-react";
 
 import toast from "react-hot-toast";
@@ -28,6 +29,49 @@ import {
 } from "../api/interviews";
 
 import ConfirmModal from "../components/ConfirmModal";
+
+function InterviewSkeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3].map((item) => (
+        <div
+          key={item}
+          className="rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 p-4 animate-pulse"
+        >
+          <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-4">
+            
+            <div className="flex items-start gap-3 min-w-0 flex-1">
+              
+              <div className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0" />
+
+              <div className="flex-1 space-y-3">
+                
+                <div className="h-4 w-56 bg-slate-200 dark:bg-slate-700 rounded" />
+
+                <div className="flex gap-3">
+                  <div className="h-3 w-24 bg-slate-200 dark:bg-slate-700 rounded" />
+                  <div className="h-3 w-28 bg-slate-200 dark:bg-slate-700 rounded" />
+                  <div className="h-3 w-20 bg-slate-200 dark:bg-slate-700 rounded" />
+                </div>
+
+                <div className="h-3 w-36 bg-slate-200 dark:bg-slate-700 rounded" />
+
+                <div className="h-3 w-44 bg-slate-200 dark:bg-slate-700 rounded" />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="h-9 w-24 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+              <div className="h-9 w-16 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+              <div className="h-9 w-20 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+            </div>
+
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Interview() {
   const initialForm = {
@@ -59,8 +103,8 @@ function Interview() {
   const [error, setError] = useState("");
 
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] =
-    useState("ALL");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [sortOption, setSortOption] = useState("newest");
 
   // ==========================
   // LOAD INTERVIEWS
@@ -74,10 +118,7 @@ function Interview() {
 
       setInterviews(response.data || []);
     } catch (err) {
-      console.error(
-        "Fetch Interviews Error:",
-        err
-      );
+      console.error("Fetch Interviews Error:", err);
 
       const message =
         err.response?.data?.message ||
@@ -164,10 +205,7 @@ function Interview() {
     e.preventDefault();
 
     if (!form.title.trim()) {
-      toast.error(
-        "Interview title is required."
-      );
-
+      toast.error("Interview title is required.");
       return;
     }
 
@@ -178,22 +216,17 @@ function Interview() {
       const payload = {
         title: form.title.trim(),
 
-        type:
-          form.type.trim() || null,
+        type: form.type.trim() || null,
 
-        company:
-          form.company.trim() || null,
+        company: form.company.trim() || null,
 
-        role:
-          form.role.trim() || null,
+        role: form.role.trim() || null,
 
         status: form.status,
 
-        scheduledAt:
-          form.scheduledAt || null,
+        scheduledAt: form.scheduledAt || null,
 
-        notes:
-          form.notes.trim() || null,
+        notes: form.notes.trim() || null,
       };
 
       let response;
@@ -209,9 +242,7 @@ function Interview() {
             "Interview updated successfully."
         );
       } else {
-        response = await createInterview(
-          payload
-        );
+        response = await createInterview(payload);
 
         toast.success(
           response.message ||
@@ -223,10 +254,7 @@ function Interview() {
 
       await fetchInterviews();
     } catch (err) {
-      console.error(
-        "Save Interview Error:",
-        err
-      );
+      console.error("Save Interview Error:", err);
 
       toast.error(
         err.response?.data?.message ||
@@ -261,10 +289,7 @@ function Interview() {
 
       await fetchInterviews();
     } catch (err) {
-      console.error(
-        "Status Update Error:",
-        err
-      );
+      console.error("Status Update Error:", err);
 
       toast.error(
         err.response?.data?.message ||
@@ -301,16 +326,13 @@ function Interview() {
     }
 
     try {
-      setDeletingId(
-        pendingDeleteInterview.id
-      );
+      setDeletingId(pendingDeleteInterview.id);
 
       setError("");
 
-      const response =
-        await deleteInterview(
-          pendingDeleteInterview.id
-        );
+      const response = await deleteInterview(
+        pendingDeleteInterview.id
+      );
 
       toast.success(
         response.message ||
@@ -321,10 +343,7 @@ function Interview() {
 
       await fetchInterviews();
     } catch (err) {
-      console.error(
-        "Delete Interview Error:",
-        err
-      );
+      console.error("Delete Interview Error:", err);
 
       toast.error(
         err.response?.data?.message ||
@@ -336,14 +355,12 @@ function Interview() {
   };
 
   // ==========================
-  // FILTER INTERVIEWS
+  // FILTER + SORT INTERVIEWS
   // ==========================
   const filteredInterviews = useMemo(() => {
-    const query = search
-      .trim()
-      .toLowerCase();
+    const query = search.trim().toLowerCase();
 
-    return interviews.filter(
+    const result = interviews.filter(
       (interview) => {
         const matchesSearch =
           !query ||
@@ -362,8 +379,7 @@ function Interview() {
 
         const matchesStatus =
           statusFilter === "ALL" ||
-          interview.status ===
-            statusFilter;
+          interview.status === statusFilter;
 
         return (
           matchesSearch &&
@@ -371,10 +387,50 @@ function Interview() {
         );
       }
     );
+
+    return [...result].sort((a, b) => {
+      switch (sortOption) {
+        case "oldest":
+          return (
+            new Date(a.createdAt || 0) -
+            new Date(b.createdAt || 0)
+          );
+
+        case "title-asc":
+          return (a.title || "").localeCompare(
+            b.title || ""
+          );
+
+        case "title-desc":
+          return (b.title || "").localeCompare(
+            a.title || ""
+          );
+
+        case "scheduled-newest":
+          return (
+            new Date(b.scheduledAt || 0) -
+            new Date(a.scheduledAt || 0)
+          );
+
+        case "scheduled-oldest":
+          return (
+            new Date(a.scheduledAt || 0) -
+            new Date(b.scheduledAt || 0)
+          );
+
+        case "newest":
+        default:
+          return (
+            new Date(b.createdAt || 0) -
+            new Date(a.createdAt || 0)
+          );
+      }
+    });
   }, [
     interviews,
     search,
     statusFilter,
+    sortOption,
   ]);
 
   // ==========================
@@ -698,10 +754,10 @@ function Interview() {
         </div>
 
         {/* ==========================
-            SEARCH + FILTER
+            SEARCH + FILTER + SORT
         ========================== */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-sm">
-          <div className="grid sm:grid-cols-[1fr_auto] gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3">
             <div className="relative">
               <Search
                 size={16}
@@ -728,11 +784,9 @@ function Interview() {
               <select
                 value={statusFilter}
                 onChange={(e) =>
-                  setStatusFilter(
-                    e.target.value
-                  )
+                  setStatusFilter(e.target.value)
                 }
-                className="pl-9 pr-8 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-700 dark:text-slate-200 outline-none"
+                className="w-full md:w-auto pl-9 pr-8 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-700 dark:text-slate-200 outline-none"
               >
                 <option value="ALL">
                   All Statuses
@@ -752,6 +806,45 @@ function Interview() {
 
                 <option value="CANCELLED">
                   Cancelled
+                </option>
+              </select>
+            </div>
+
+            <div className="relative">
+              <ArrowUpDown
+                size={15}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+              />
+
+              <select
+                value={sortOption}
+                onChange={(e) =>
+                  setSortOption(e.target.value)
+                }
+                className="w-full md:w-auto pl-9 pr-8 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-700 dark:text-slate-200 outline-none"
+              >
+                <option value="newest">
+                  Newest Added
+                </option>
+
+                <option value="oldest">
+                  Oldest Added
+                </option>
+
+                <option value="title-asc">
+                  Title A–Z
+                </option>
+
+                <option value="title-desc">
+                  Title Z–A
+                </option>
+
+                <option value="scheduled-newest">
+                  Scheduled Date — Newest
+                </option>
+
+                <option value="scheduled-oldest">
+                  Scheduled Date — Oldest
                 </option>
               </select>
             </div>
@@ -779,18 +872,7 @@ function Interview() {
             </div>
           </div>
 
-          {loading && (
-            <div className="flex items-center justify-center gap-2 py-10 text-slate-400">
-              <LoaderCircle
-                size={18}
-                className="animate-spin"
-              />
-
-              <span className="text-xs font-semibold">
-                Loading interviews...
-              </span>
-            </div>
-          )}
+          {loading && <InterviewSkeleton />}
 
           {!loading &&
             filteredInterviews.length === 0 && (
@@ -848,7 +930,6 @@ function Interview() {
                               {interview.company && (
                                 <span className="inline-flex items-center gap-1.5">
                                   <Building2 size={12} />
-
                                   {interview.company}
                                 </span>
                               )}
@@ -858,7 +939,6 @@ function Interview() {
                                   <BriefcaseBusiness
                                     size={12}
                                   />
-
                                   {interview.role}
                                 </span>
                               )}
@@ -866,7 +946,6 @@ function Interview() {
                               {interview.type && (
                                 <span className="inline-flex items-center gap-1.5">
                                   <Mic size={12} />
-
                                   {interview.type}
                                 </span>
                               )}
@@ -930,9 +1009,7 @@ function Interview() {
                           <button
                             type="button"
                             onClick={() =>
-                              openEditForm(
-                                interview
-                              )
+                              openEditForm(interview)
                             }
                             className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition"
                           >
@@ -943,9 +1020,7 @@ function Interview() {
                           <button
                             type="button"
                             onClick={() =>
-                              requestDelete(
-                                interview
-                              )
+                              requestDelete(interview)
                             }
                             disabled={
                               deletingId ===
@@ -993,9 +1068,7 @@ function Interview() {
         }
         confirmText="Delete Interview"
         cancelText="Cancel"
-        loading={Boolean(
-          deletingId
-        )}
+        loading={Boolean(deletingId)}
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
       />
