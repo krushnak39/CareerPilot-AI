@@ -39,13 +39,13 @@ function JobSkeleton() {
           className="rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 p-4 animate-pulse"
         >
           <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-4">
-            
+
             <div className="flex items-start gap-3 min-w-0 flex-1">
-              
+
               <div className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0" />
 
               <div className="flex-1 space-y-3">
-                
+
                 <div className="h-4 w-52 bg-slate-200 dark:bg-slate-700 rounded" />
 
                 <div className="flex gap-3">
@@ -55,6 +55,7 @@ function JobSkeleton() {
                 </div>
 
                 <div className="h-3 w-40 bg-slate-200 dark:bg-slate-700 rounded" />
+
               </div>
             </div>
 
@@ -70,8 +71,6 @@ function JobSkeleton() {
     </div>
   );
 }
-
-
 
 function Jobs() {
   const [jobs, setJobs] = useState([]);
@@ -173,6 +172,8 @@ function Jobs() {
   // OPEN EDIT FORM
   // ==========================
   const openEditForm = (job) => {
+    console.log("EDIT BUTTON CLICKED:", job);
+
     setEditingId(job.id);
 
     setForm({
@@ -197,6 +198,11 @@ function Jobs() {
 
     setShowForm(true);
     setError("");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   // ==========================
@@ -336,7 +342,9 @@ function Jobs() {
     }
 
     try {
-      setDeletingId(pendingDeleteJob.id);
+      setDeletingId(
+        pendingDeleteJob.id
+      );
 
       setError("");
 
@@ -520,7 +528,7 @@ function Jobs() {
           <button
             type="button"
             onClick={openCreateForm}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold shadow-lg shadow-blue-500/20 transition"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold shadow-lg shadow-blue-500/20 transition"
           >
             <Plus size={17} />
             Add Job
@@ -543,7 +551,7 @@ function Jobs() {
             CREATE / EDIT FORM
         ========================== */}
         {showForm && (
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
 
             <div className="flex items-center justify-between mb-5">
 
@@ -712,12 +720,12 @@ function Jobs() {
                 />
               </div>
 
-              <div className="sm:col-span-2 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+              <div className="sm:col-span-2 flex justify-end gap-2">
 
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
                 >
                   Cancel
                 </button>
@@ -725,7 +733,7 @@ function Jobs() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition disabled:opacity-50"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition disabled:opacity-50"
                 >
 
                   {saving && (
@@ -753,9 +761,8 @@ function Jobs() {
         ========================== */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-sm">
 
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_auto]">
+          <div className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
 
-            {/* SEARCH */}
             <div className="relative">
 
               <Search
@@ -775,7 +782,6 @@ function Jobs() {
 
             </div>
 
-            {/* STATUS FILTER */}
             <div className="relative">
 
               <Filter
@@ -790,7 +796,7 @@ function Jobs() {
                     e.target.value
                   )
                 }
-                className="w-full md:w-auto pl-9 pr-8 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-700 dark:text-slate-200 outline-none"
+                className="pl-9 pr-8 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-700 dark:text-slate-200 outline-none"
               >
                 <option value="ALL">
                   All Statuses
@@ -819,7 +825,6 @@ function Jobs() {
 
             </div>
 
-            {/* SORT */}
             <div className="relative">
 
               <ArrowUpDown
@@ -878,9 +883,9 @@ function Jobs() {
         {/* ==========================
             JOB APPLICATIONS
         ========================== */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+          <div className="flex items-center justify-between mb-5">
 
             <div>
               <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
@@ -947,7 +952,7 @@ function Jobs() {
 
                           <div className="min-w-0">
 
-                            <div className="grid grid-cols-1 sm:flex sm:flex-wrap items-stretch gap-2 w-full xl:w-auto">
+                            <div className="flex flex-wrap items-center gap-2">
 
                               <h3 className="text-sm font-black text-slate-900 dark:text-white">
                                 {job.jobTitle}
@@ -1012,7 +1017,7 @@ function Jobs() {
                             )}
 
                             {job.description && (
-                              <p className="text-xs text-slate-600 dark:text-slate-300 mt-3 max-w-3xl whitespace-pre-wrap break-words overflow-hidden">
+                              <p className="text-xs text-slate-600 dark:text-slate-300 mt-3 max-w-3xl whitespace-pre-wrap">
                                 {job.description}
                               </p>
                             )}
@@ -1021,6 +1026,9 @@ function Jobs() {
 
                         </div>
 
+                        {/* ==========================
+                            ACTION BUTTONS
+                        ========================== */}
                         <div className="flex flex-wrap items-center gap-2">
 
                           <select
@@ -1054,25 +1062,58 @@ function Jobs() {
                             </option>
                           </select>
 
+                          {/* ==========================
+                              EDIT BUTTON - FIXED
+                          ========================== */}
+                          <button
+  type="button"
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setEditingId(job.id);
+
+    setForm({
+      jobTitle: job.jobTitle || "",
+      company: job.company || "",
+      location: job.location || "",
+      jobType: job.jobType || "",
+      description: job.description || "",
+      status: job.status || "SAVED",
+      appliedDate: job.appliedDate
+        ? new Date(job.appliedDate)
+            .toISOString()
+            .split("T")[0]
+        : "",
+    });
+
+    setShowForm(true);
+    setError("");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }}
+  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 cursor-pointer"
+>
+  <Pencil size={14} />
+  Edit
+</button>
+
+                          {/* ==========================
+                              DELETE BUTTON
+                          ========================== */}
                           <button
                             type="button"
-                            onClick={() =>
-                              openEditForm(job)
-                            }
-                            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition"
-                          >
-                            <Pencil
-                              size={14}
-                            />
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
 
-                            Edit
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              requestDelete(job)
-                            }
+                              requestDelete(
+                                job
+                              );
+                            }}
                             disabled={
                               deletingId ===
                               job.id
