@@ -1,0 +1,45 @@
+# Render Blueprint: backend API + AI service.
+# Frontend is deployed separately on Vercel (see DEPLOYMENT.md).
+services:
+  - type: web
+    name: careerpilot-api
+    runtime: node
+    rootDir: Backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false          # e.g. https://your-app.vercel.app
+      - key: AIML_SERVICE_URL
+        sync: false          # e.g. https://careerpilot-aiml.onrender.com
+      - key: AIML_SERVICE_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CALLBACK_URL
+        sync: false          # https://your-app.vercel.app/login
+
+  - type: web
+    name: careerpilot-aiml
+    runtime: docker
+    dockerfilePath: ./Dockerfile.aiml
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: AIML_LIGHT_MODE
+        value: "1"
+      - key: AIML_SERVICE_KEY
+        sync: false          # same value as on the API service

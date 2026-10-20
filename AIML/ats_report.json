@@ -1,0 +1,22 @@
+{
+    "ats_score": 88.89,
+    "matched_skills": [
+        "aws",
+        "fastapi",
+        "sql",
+        "mongodb",
+        "python",
+        "git",
+        "docker",
+        "linux"
+    ],
+    "missing_skills": [
+        "rest api"
+    ],
+    "priority_skills": [
+        "rest api"
+    ],
+    "recommendations": {
+        "rest api": "Learn REST API design, HTTP methods, and API development."
+    }
+}

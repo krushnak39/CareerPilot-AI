@@ -1,0 +1,7 @@
+Python is a programming language.
+FastAPI is a Python framework used for building APIs.
+REST APIs use HTTP methods such as GET, POST, PUT, and DELETE.
+AWS provides cloud computing services.
+Docker is a Containerization platform used to  package applications.
+Docker allows applications to  run in isolated containers.
+

@@ -11,6 +11,7 @@ const {
   unlinkGoogle,
   unlinkLinkedin,
   getCurrentUser,
+  setPassword,
   changePassword,
   forgotPassword,
   resetPassword,
@@ -39,6 +40,7 @@ const {
 // ==========================
 // REGISTER
 // ==========================
+
 router.post(
   "/register",
   authLimiter,
@@ -49,6 +51,7 @@ router.post(
 // ==========================
 // LOGIN
 // ==========================
+
 router.post(
   "/login",
   loginLimiter,
@@ -59,6 +62,7 @@ router.post(
 // ==========================
 // GOOGLE LOGIN
 // ==========================
+
 router.post(
   "/google",
   authLimiter,
@@ -68,6 +72,7 @@ router.post(
 // ==========================
 // GITHUB LOGIN
 // ==========================
+
 router.post(
   "/github",
   authLimiter,
@@ -77,6 +82,7 @@ router.post(
 // ==========================
 // LINKEDIN LOGIN
 // ==========================
+
 router.post(
   "/linkedin",
   authLimiter,
@@ -87,6 +93,7 @@ router.post(
 // FORGOT PASSWORD
 // POST /api/auth/forgot-password
 // ==========================
+
 router.post(
   "/forgot-password",
   authLimiter,
@@ -97,6 +104,7 @@ router.post(
 // RESET PASSWORD
 // POST /api/auth/reset-password
 // ==========================
+
 router.post(
   "/reset-password",
   authLimiter,
@@ -104,9 +112,21 @@ router.post(
 );
 
 // ==========================
+// SET PASSWORD
+// PUT /api/auth/set-password
+// ==========================
+
+router.put(
+  "/set-password",
+  authMiddleware,
+  setPassword
+);
+
+// ==========================
 // CHANGE PASSWORD
 // PUT /api/auth/change-password
 // ==========================
+
 router.put(
   "/change-password",
   authMiddleware,
@@ -116,6 +136,7 @@ router.put(
 // ==========================
 // UNLINK GOOGLE
 // ==========================
+
 router.delete(
   "/google",
   authMiddleware,
@@ -125,6 +146,7 @@ router.delete(
 // ==========================
 // UNLINK LINKEDIN
 // ==========================
+
 router.delete(
   "/linkedin",
   authMiddleware,
@@ -134,6 +156,7 @@ router.delete(
 // ==========================
 // CURRENT USER
 // ==========================
+
 router.get(
   "/me",
   authMiddleware,

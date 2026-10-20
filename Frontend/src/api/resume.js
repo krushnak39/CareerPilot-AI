@@ -191,3 +191,20 @@ export const deleteResume = async (
 
   return response.data;
 };
+
+// ==========================
+// ANALYZE RESUME (AI + ATS)
+// ==========================
+export const analyzeResume = async (
+  resumeId,
+  jobDescription = ""
+) => {
+  const response =
+    await api.post(
+      `/resumes/${resumeId}/analyze`,
+      { jobDescription },
+      { timeout: 150000 }
+    );
+
+  return response.data;
+};

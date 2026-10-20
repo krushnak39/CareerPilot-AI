@@ -9,14 +9,9 @@ import {
   Tooltip,
 } from "recharts";
 
-const data = [
-  { name: "Resume", score: 82 },
-  { name: "ATS Match", score: 78 },
-  { name: "Learning", score: 65 },
-  { name: "Interview", score: 55 },
-];
+function ProgressChart({ data = [] }) {
+  const hasData = data.some((item) => item.score > 0);
 
-function ProgressChart() {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -41,9 +36,15 @@ function ProgressChart() {
           Career Progress
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-          Track your overall AI career readiness modules.
+          Calculated from your resume analysis, learning roadmaps and interviews.
         </p>
       </div>
+
+      {!hasData && (
+        <p className="mb-3 text-xs text-amber-600 dark:text-amber-400">
+          No progress yet. Analyze your resume, complete roadmap topics or finish an interview to see your scores here.
+        </p>
+      )}
 
       {/* Chart Canvas */}
       <div className="w-full h-[260px] sm:h-[300px]">
@@ -66,6 +67,7 @@ function ProgressChart() {
             />
 
             <YAxis
+              domain={[0, 100]}
               tick={{ fontSize: 12, fill: isDark ? "#94A3B8" : "#64748B" }}
               tickLine={false}
               axisLine={false}

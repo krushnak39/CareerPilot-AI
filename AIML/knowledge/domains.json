@@ -1,0 +1,315 @@
+{
+  "software_it": {
+    "name": "Software and IT",
+    "keywords": [
+      "computer science",
+      "computer engineering",
+      "information technology",
+      "software",
+      "programming",
+      "python",
+      "java",
+      "javascript",
+      "react",
+      "fastapi",
+      "sql",
+      "docker"
+    ],
+    "education_keywords": [
+      "computer science",
+      "information technology",
+      "software engineering",
+      "computer engineering",
+      "b.tech cse",
+      "b.tech it",
+      "b.tech software engineering",
+      "b.tech computer engineering",
+      "bca",
+      "mca"
+    ],
+    "experience_keywords": [
+      "software development",
+      "web development",
+      "backend development",
+      "frontend development",
+      "full stack development",
+      "devops",
+      "cloud computing",
+      "database management"
+    ],
+    "careers": [
+      "Software Developer",
+      "Backend Developer",
+      "Frontend Developer",
+      "Full Stack Developer",
+      "DevOps Engineer"
+    ]
+  },
+
+  "data_ai": {
+    "name": "Data Science and AI",
+    "keywords": [
+      "data science",
+      "machine learning",
+      "artificial intelligence",
+      "deep learning",
+      "data analyst",
+      "python",
+      "pandas",
+      "numpy",
+      "tensorflow",
+      "pytorch",
+      "scikit-learn"
+    ],
+    "education_keywords": [
+      "data science",
+      "machine learning",
+      "artificial intelligence",
+      "deep learning",
+      "b.tech data science",
+      "b.tech ai",
+      "b.tech machine learning",
+      "b.tech deep learning",
+      "bca data science",
+      "mca data science"
+    ],
+    "experience_keywords": [
+      "data analysis",
+      "machine learning",
+      "deep learning",
+      "data visualization",
+      "data preprocessing"
+    ],
+    "careers": [
+      "Data Analyst",
+      "Data Scientist",
+      "Machine Learning Engineer",
+      "AI Engineer"
+    ]
+  },
+
+  "mechanical": {
+    "name": "Mechanical Engineering",
+    "keywords": [
+      "mechanical engineering",
+      "mechanical",
+      "autocad",
+      "solidworks",
+      "catia",
+      "ansys",
+      "thermodynamics",
+      "manufacturing",
+      "cad",
+      "cam"
+    ],
+    "education_keywords":
+    [
+      "mechanical engineering",
+      "mechanical",
+      "b.tech mechanical engineering",
+      "b.tech mechanical",
+      "b.tech production engineering",
+      "b.tech manufacturing engineering"
+    ],
+    "experience_keywords": [
+      "mechanical design",
+      "manufacturing",
+      "automotive engineering",
+      "cad design",
+      "cam programming"
+    ],
+    "careers": [
+      "Mechanical Design Engineer",
+      "Manufacturing Engineer",
+      "Automotive Engineer",
+      "CAD Engineer"
+    ]
+  },
+
+  "civil": {
+    "name": "Civil Engineering",
+    "keywords": [
+      "civil engineering",
+      "civil",
+      "autocad",
+      "revit",
+      "structural engineering",
+      "construction",
+      "surveying",
+      "structural analysis"
+    ],
+    "education_keywords": [
+      "civil engineering",
+      "civil",
+      "b.tech civil engineering",
+      "b.tech civil",
+      "b.tech structural engineering",
+      "b.tech construction engineering"
+    ],
+    "experience_keywords": [
+      "civil design",
+      "structural analysis",
+      "construction management",
+      "surveying",
+      "autocad",
+      "revit"
+    ],
+    "careers": [
+      "Civil Engineer",
+      "Structural Engineer",
+      "Construction Engineer",
+      "Site Engineer"
+    ]
+  },
+
+  "electrical": {
+    "name": "Electrical Engineering",
+    "keywords": [
+      "electrical engineering",
+      "electrical",
+      "power systems",
+      "electrical machines",
+      "control systems",
+      "matlab",
+      "plc",
+      "scada"
+    ],
+    "education_keywords": [
+      "electrical engineering",
+      "electrical",
+      "b.tech electrical engineering",
+      "b.tech electrical"
+    ],
+    "experience_keywords": [
+      "electrical design",
+      "power systems",
+      "control systems",
+      "plc programming",
+      "scada"
+    ],
+    "careers": [
+      "Electrical Engineer",
+      "Power Systems Engineer",
+      "Control Systems Engineer",
+      "Electrical Design Engineer"
+    ]
+  },
+
+  "electronics": {
+    "name": "Electronics and Embedded Systems",
+    "keywords": [
+      "electronics",
+      "electronics engineering",
+      "embedded systems",
+      "microcontroller",
+      "arduino",
+      "raspberry pi",
+      "vlsi",
+      "verilog",
+      "embedded c",
+      "iot"
+    ],
+    "education_keywords": [
+      "electronics engineering",
+      "embedded systems",
+      "b.tech electronics engineering",
+      "b.tech embedded systems"
+    ],
+    "experience_keywords": [
+      "electronics design",
+      "embedded systems development",
+      "microcontroller programming",
+      "arduino programming",
+      "raspberry pi development"
+    ],
+    "careers": [
+      "Embedded Engineer",
+      "VLSI Engineer",
+      "Electronics Engineer",
+      "IoT Engineer"
+    ]
+  },
+
+  "business_finance": {
+    "name": "Business and Finance",
+    "keywords": [
+      "commerce",
+      "business administration",
+      "finance",
+      "accounting",
+      "economics",
+      "banking",
+      "marketing",
+      "management",
+      "mba"
+    ],
+    "education_keywords": [
+      "commerce",
+      "business administration",
+      "finance",
+      "accounting",
+      "economics",
+      "banking",
+      "marketing",
+      "management",
+      "mba"
+    ],
+    "experience_keywords": [
+      "financial analysis",
+      "accounting",
+      "business management",
+      "marketing analysis",
+      "economics"
+    ],
+    "careers": [
+      "Financial Analyst",
+      "Business Analyst",
+      "Accountant",
+      "Marketing Analyst",
+      "Business Consultant"
+    ]
+  },
+
+  "design": {
+    "name": "Design and Creative",
+    "keywords": [
+      "graphic design",
+      "ui design",
+      "ux design",
+      "figma",
+      "adobe",
+      "photoshop",
+      "illustrator",
+      "user experience",
+      "visual design"
+    ],
+    "education_keywords": [
+      "graphic design",
+      "ui design",
+      "ux design",
+      "figma",
+      "adobe",
+      "photoshop",
+      "illustrator",
+      "user experience",
+      "visual design"
+    ],
+    "experience_keywords": [
+      "graphic design",
+      "ui design",
+      "ux design",
+      "figma",
+      "adobe",
+      "photoshop",
+      "illustrator",
+      "user experience",
+      "visual design"
+    ],
+    "careers": [
+      "UI Designer",
+      "UX Designer",
+      "Graphic Designer",
+      "Product Designer"
+    ]
+  }
+}

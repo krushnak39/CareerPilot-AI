@@ -1,7 +1,14 @@
 const express = require("express");
+
 const cors = require("cors");
+
 const helmet = require("helmet");
+
 const morgan = require("morgan");
+
+const fs = require("fs");
+
+const path = require("path");
 
 const authRoutes =
   require("./routes/auth.routes");
@@ -21,8 +28,17 @@ const jobRoutes =
 const interviewRoutes =
   require("./routes/interview.routes");
 
-  const learningRoutes =
+const activityRoutes =
+  require("./routes/activity.routes");
+
+const learningRoutes =
   require("./routes/learning.routes");
+
+const studyMaterialRoutes =
+  require("./routes/studyMaterial.routes");
+
+const learningRoadmapRoutes =
+  require("./routes/learningRoadmap.routes");
 
 const {
   notFoundHandler,
@@ -33,14 +49,74 @@ const {
 
 const app = express();
 
+// Render / Railway / Vercel sit behind a proxy. Needed so
+// rate limiting and client IPs work correctly in production.
+app.set("trust proxy", 1);
+
+// Make sure upload folders exist (they are git-ignored, so a
+// fresh deployment would otherwise fail on the first upload).
+["uploads/resumes", "private_uploads"].forEach(
+  (dir) =>
+    fs.mkdirSync(
+      path.join(process.cwd(), dir),
+      { recursive: true }
+    )
+);
+
+// Comma-separated list of allowed frontend origins, e.g.
+// CORS_ORIGINS=https://careerpilot.vercel.app,http://localhost:5173
+const allowedOrigins = (
+  process.env.CORS_ORIGINS ||
+  process.env.FRONTEND_URL ||
+  "http://localhost:5173"
+)
+  .split(",")
+  .map((origin) =>
+    origin.trim().replace(/\/+$/, "")
+  )
+  .filter(Boolean);
+
 // ==========================
 // MIDDLEWARE
 // ==========================
-app.use(cors());
 
-app.use(helmet());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // allow non-browser tools (no Origin header)
+      if (
+        !origin ||
+        allowedOrigins.includes(origin)
+      ) {
+        return callback(null, true);
+      }
 
-app.use(morgan("dev"));
+      return callback(
+        new Error(
+          `Origin ${origin} not allowed by CORS`
+        )
+      );
+    },
+    credentials: true,
+  })
+);
+
+app.use(
+  helmet({
+    // frontend is on a different domain and loads /uploads files
+    crossOriginResourcePolicy: {
+      policy: "cross-origin",
+    },
+  })
+);
+
+app.use(
+  morgan(
+    process.env.NODE_ENV === "production"
+      ? "combined"
+      : "dev"
+  )
+);
 
 app.use(express.json());
 
@@ -50,9 +126,20 @@ app.use(
   })
 );
 
+app.use(
+  "/uploads",
+  express.static(
+    path.join(
+      process.cwd(),
+      "uploads"
+    )
+  )
+);
+
 // ==========================
 // HEALTH CHECK
 // ==========================
+
 app.get(
   "/api/health",
   (req, res) => {
@@ -67,6 +154,7 @@ app.get(
 // ==========================
 // ROUTES
 // ==========================
+
 app.use(
   "/api/auth",
   authRoutes
@@ -98,14 +186,30 @@ app.use(
 );
 
 app.use(
+  "/api/activities",
+  activityRoutes
+);
+
+app.use(
   "/api/learning",
   learningRoutes
+);
+
+app.use(
+  "/api/study-materials",
+  studyMaterialRoutes
+);
+
+app.use(
+  "/api/learning-roadmaps",
+  learningRoadmapRoutes
 );
 
 // ==========================
 // 404 HANDLER
 // MUST BE AFTER ROUTES
 // ==========================
+
 app.use(
   notFoundHandler
 );
@@ -114,6 +218,7 @@ app.use(
 // GLOBAL ERROR HANDLER
 // MUST BE LAST
 // ==========================
+
 app.use(
   errorHandler
 );

@@ -1,0 +1,686 @@
+{
+  "python": {
+    "name": "Python",
+    "aliases": [
+      "python",
+      "python programming",
+      "python language"
+    ]
+  },
+
+  "java": {
+    "name": "Java",
+    "aliases": [
+      "java",
+      "java programming",
+      "java language"
+    ]
+  },
+
+  "programming": {
+    "name": "Programming",
+    "aliases": [
+      "programming",
+      "programming fundamentals",
+      "computer programming"
+    ]
+  },
+
+  "c++": {
+    "name": "C++",
+    "aliases": [
+      "c++",
+      "cpp",
+      "c plus plus"
+    ]
+  },
+
+  "sql": {
+    "name": "SQL",
+    "aliases": [
+      "sql",
+      "structured query language"
+    ]
+  },
+
+  "html": {
+    "name": "HTML",
+    "aliases": [
+      "html",
+      "hypertext markup language"
+    ]
+  },
+
+  "css": {
+    "name": "CSS",
+    "aliases": [
+      "css",
+      "cascading style sheets"
+    ]
+  },
+
+  "javascript": {
+    "name": "JavaScript",
+    "aliases": [
+      "javascript",
+      "java script",
+      "js"
+    ]
+  },
+
+  "typescript": {
+    "name": "TypeScript",
+    "aliases": [
+      "typescript",
+      "type script",
+      "ts"
+    ]
+  },
+
+  "react": {
+    "name": "React",
+    "aliases": [
+      "react",
+      "reactjs",
+      "react.js"
+    ]
+  },
+
+  "node.js": {
+    "name": "Node.js",
+    "aliases": [
+      "node.js",
+      "nodejs",
+      "node js"
+    ]
+  },
+
+  "express": {
+    "name": "Express",
+    "aliases": [
+      "express",
+      "express.js",
+      "expressjs"
+    ]
+  },
+
+  "fastapi": {
+    "name": "FastAPI",
+    "aliases": [
+      "fastapi",
+      "fast api"
+    ]
+  },
+
+  "django": {
+    "name": "Django",
+    "aliases": [
+      "django"
+    ]
+  },
+
+  "rest_api": {
+    "name": "REST API",
+    "aliases": [
+      "rest api",
+      "rest apis",
+      "restful api",
+      "restful apis",
+      "rest api development",
+      "restful web services"
+    ]
+  },
+
+  "git": {
+    "name": "Git",
+    "aliases": [
+      "git",
+      "github",
+      "version control"
+    ]
+  },
+
+  "docker": {
+    "name": "Docker",
+    "aliases": [
+      "docker",
+      "containerization",
+      "containerization platform"
+    ]
+  },
+
+  "kubernetes": {
+    "name": "Kubernetes",
+    "aliases": [
+      "kubernetes",
+      "k8s"
+    ]
+  },
+
+  "aws": {
+    "name": "AWS",
+    "aliases": [
+      "aws",
+      "amazon web services"
+    ]
+  },
+
+  "linux": {
+    "name": "Linux",
+    "aliases": [
+      "linux",
+      "linux operating system"
+    ]
+  },
+
+  "machine_learning": {
+    "name": "Machine Learning",
+    "aliases": [
+      "machine learning",
+      "ml"
+    ]
+  },
+
+  "deep_learning": {
+    "name": "Deep Learning",
+    "aliases": [
+      "deep learning",
+      "dl"
+    ]
+  },
+
+  "pandas": {
+    "name": "Pandas",
+    "aliases": [
+      "pandas"
+    ]
+  },
+
+  "numpy": {
+    "name": "NumPy",
+    "aliases": [
+      "numpy",
+      "num py"
+    ]
+  },
+
+  "scikit-learn": {
+    "name": "Scikit-learn",
+    "aliases": [
+      "scikit-learn",
+      "scikit learn",
+      "sklearn"
+    ]
+  },
+
+  "tensorflow": {
+    "name": "TensorFlow",
+    "aliases": [
+      "tensorflow",
+      "tensor flow"
+    ]
+  },
+
+  "pytorch": {
+    "name": "PyTorch",
+    "aliases": [
+      "pytorch",
+      "py torch"
+    ]
+  },
+
+  "llm": {
+    "name": "LLM",
+    "aliases": [
+      "llm",
+      "large language model",
+      "large language models"
+    ]
+  },
+
+  "rag": {
+    "name": "RAG",
+    "aliases": [
+      "rag",
+      "retrieval augmented generation",
+      "retrieval-augmented generation"
+    ]
+  },
+
+  "statistics": {
+    "name": "Statistics",
+    "aliases": [
+      "statistics",
+      "statistical analysis",
+      "statistical modeling"
+    ]
+  },
+
+  "data_analysis": {
+    "name": "Data Analysis",
+    "aliases": [
+      "data analysis",
+      "data analytics",
+      "data analyst"
+    ]
+  },
+
+  "excel": {
+    "name": "Microsoft Excel",
+    "aliases": [
+      "excel",
+      "microsoft excel",
+      "ms excel"
+    ]
+  },
+
+  "autocad": {
+    "name": "AutoCAD",
+    "aliases": [
+      "autocad",
+      "auto cad"
+    ]
+  },
+
+  "solidworks": {
+    "name": "SolidWorks",
+    "aliases": [
+      "solidworks",
+      "solid works"
+    ]
+  },
+
+  "catia": {
+    "name": "CATIA",
+    "aliases": [
+      "catia"
+    ]
+  },
+
+  "cad": {
+    "name": "CAD",
+    "aliases": [
+      "cad",
+      "computer aided design",
+      "computer-aided design"
+    ]
+  },
+
+  "cam": {
+    "name": "CAM",
+    "aliases": [
+      "cam",
+      "computer aided manufacturing",
+      "computer-aided manufacturing"
+    ]
+  },
+
+  "mechanical_design": {
+    "name": "Mechanical Design",
+    "aliases": [
+      "mechanical design",
+      "mechanical designing"
+    ]
+  },
+
+  "mechanical_engineering": {
+    "name": "Mechanical Engineering",
+    "aliases": [
+      "mechanical engineering",
+      "mechanical engineer"
+    ]
+  },
+
+  "manufacturing": {
+    "name": "Manufacturing",
+    "aliases": [
+      "manufacturing",
+      "manufacturing engineering"
+    ]
+  },
+
+  "production": {
+    "name": "Production",
+    "aliases": [
+      "production",
+      "production engineering",
+      "production management"
+    ]
+  },
+
+  "thermodynamics": {
+    "name": "Thermodynamics",
+    "aliases": [
+      "thermodynamics",
+      "thermodynamic"
+    ]
+  },
+
+  "automotive": {
+    "name": "Automotive",
+    "aliases": [
+      "automotive",
+      "automotive engineering",
+      "automobile engineering"
+    ]
+  },
+
+  "civil_engineering": {
+    "name": "Civil Engineering",
+    "aliases": [
+      "civil engineering",
+      "civil engineer"
+    ]
+  },
+
+  "construction": {
+    "name": "Construction",
+    "aliases": [
+      "construction",
+      "construction engineering"
+    ]
+  },
+
+  "surveying": {
+    "name": "Surveying",
+    "aliases": [
+      "surveying",
+      "land surveying"
+    ]
+  },
+
+  "structural_engineering": {
+    "name": "Structural Engineering",
+    "aliases": [
+      "structural engineering",
+      "structural engineer"
+    ]
+  },
+
+  "structural_analysis": {
+    "name": "Structural Analysis",
+    "aliases": [
+      "structural analysis"
+    ]
+  },
+
+  "revit": {
+    "name": "Revit",
+    "aliases": [
+      "revit",
+      "autodesk revit"
+    ]
+  },
+
+  "electrical_engineering": {
+    "name": "Electrical Engineering",
+    "aliases": [
+      "electrical engineering",
+      "electrical engineer"
+    ]
+  },
+
+  "electrical_machines": {
+    "name": "Electrical Machines",
+    "aliases": [
+      "electrical machines",
+      "electrical machine"
+    ]
+  },
+
+  "power_systems": {
+    "name": "Power Systems",
+    "aliases": [
+      "power systems",
+      "power system"
+    ]
+  },
+
+  "control_systems": {
+    "name": "Control Systems",
+    "aliases": [
+      "control systems",
+      "control system"
+    ]
+  },
+
+  "scada": {
+    "name": "SCADA",
+    "aliases": [
+      "scada"
+    ]
+  },
+
+  "matlab": {
+    "name": "MATLAB",
+    "aliases": [
+      "matlab",
+      "mat lab"
+    ]
+  },
+
+  "embedded_systems": {
+    "name": "Embedded Systems",
+    "aliases": [
+      "embedded systems",
+      "embedded system"
+    ]
+  },
+
+  "embedded_c": {
+    "name": "Embedded C",
+    "aliases": [
+      "embedded c",
+      "embedded-c"
+    ]
+  },
+
+  "microcontroller": {
+    "name": "Microcontroller",
+    "aliases": [
+      "microcontroller",
+      "microcontrollers"
+    ]
+  },
+
+  "arduino": {
+    "name": "Arduino",
+    "aliases": [
+      "arduino"
+    ]
+  },
+
+  "iot": {
+    "name": "IoT",
+    "aliases": [
+      "iot",
+      "internet of things"
+    ]
+  },
+
+  "vlsi": {
+    "name": "VLSI",
+    "aliases": [
+      "vlsi",
+      "very large scale integration"
+    ]
+  },
+
+  "verilog": {
+    "name": "Verilog",
+    "aliases": [
+      "verilog"
+    ]
+  },
+
+  "digital_electronics": {
+    "name": "Digital Electronics",
+    "aliases": [
+      "digital electronics",
+      "digital electronic"
+    ]
+  },
+
+  "electronics_engineering": {
+    "name": "Electronics Engineering",
+    "aliases": [
+      "electronics engineering",
+      "electronics engineer"
+    ]
+  },
+
+  "finance": {
+    "name": "Finance",
+    "aliases": [
+      "finance",
+      "financial management",
+      "financial analysis"
+    ]
+  },
+
+  "financial_analysis": {
+    "name": "Financial Analysis",
+    "aliases": [
+      "financial analysis",
+      "financial analytics"
+    ]
+  },
+
+  "accounting": {
+    "name": "Accounting",
+    "aliases": [
+      "accounting",
+      "accountancy"
+    ]
+  },
+
+  "taxation": {
+    "name": "Taxation",
+    "aliases": [
+      "taxation",
+      "tax accounting",
+      "tax"
+    ]
+  },
+
+  "bookkeeping": {
+    "name": "Bookkeeping",
+    "aliases": [
+      "bookkeeping",
+      "book keeping"
+    ]
+  },
+
+  "business_analysis": {
+    "name": "Business Analysis",
+    "aliases": [
+      "business analysis",
+      "business analytics"
+    ]
+  },
+
+  "communication": {
+    "name": "Communication",
+    "aliases": [
+      "communication",
+      "communication skills"
+    ]
+  },
+
+  "figma": {
+    "name": "Figma",
+    "aliases": [
+      "figma"
+    ]
+  },
+
+  "ui_design": {
+    "name": "UI Design",
+    "aliases": [
+      "ui design",
+      "user interface design",
+      "ui/ux design"
+    ]
+  },
+
+  "visual_design": {
+    "name": "Visual Design",
+    "aliases": [
+      "visual design"
+    ]
+  },
+
+  "user_interface": {
+    "name": "User Interface",
+    "aliases": [
+      "user interface",
+      "user interfaces"
+    ]
+  },
+
+  "ux_design": {
+    "name": "UX Design",
+    "aliases": [
+      "ux design",
+      "user experience design"
+    ]
+  },
+
+  "user_research": {
+    "name": "User Research",
+    "aliases": [
+      "user research",
+      "user research methods"
+    ]
+  },
+
+  "wireframing": {
+    "name": "Wireframing",
+    "aliases": [
+      "wireframing",
+      "wireframes",
+      "wireframe"
+    ]
+  },
+
+  "prototyping": {
+    "name": "Prototyping",
+    "aliases": [
+      "prototyping",
+      "prototype",
+      "prototypes"
+    ]
+  },
+
+  "photoshop": {
+    "name": "Adobe Photoshop",
+    "aliases": [
+      "photoshop",
+      "adobe photoshop"
+    ]
+  },
+
+  "illustrator": {
+    "name": "Adobe Illustrator",
+    "aliases": [
+      "illustrator",
+      "adobe illustrator"
+    ]
+  },
+
+  "graphic_design": {
+    "name": "Graphic Design",
+    "aliases": [
+      "graphic design",
+      "graphic designing"
+    ]
+  },
+
+  "adobe": {
+    "name": "Adobe",
+    "aliases": [
+      "adobe",
+      "adobe creative cloud"
+    ]
+  }
+}

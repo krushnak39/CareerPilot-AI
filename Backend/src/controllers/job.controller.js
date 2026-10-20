@@ -5,6 +5,7 @@ const {
   updateJobApplication,
   deleteJobApplication,
 } = require("../services/job.service");
+const { createActivity } = require("../services/activity.service");
 
 // ==========================
 // CREATE JOB APPLICATION
@@ -37,6 +38,12 @@ const createJob = async (
         description,
         status,
         appliedDate,
+      });
+      await createActivity({
+        userId: req.user.id,
+        type: "JOB_APPLICATION_ADDED",
+        title: "Job application added",
+        description: `${job.jobTitle} at ${job.company}`,
       });
 
     return res.status(201).json({
@@ -151,6 +158,13 @@ const updateJob = async (
         appliedDate,
       });
 
+      await createActivity({
+        userId: req.user.id,
+        type: "JOB_APPLICATION_UPDATED",
+        title: "Job application updated",
+        description: `${job.jobTitle} at ${job.company}`,
+      });
+
     return res.status(200).json({
       success: true,
       message:
@@ -183,6 +197,13 @@ const removeJob = async (
 
         userId:
           req.user.id,
+      });
+
+      await createActivity({
+        userId: req.user.id,
+        type: "JOB_APPLICATION_DELETED",
+        title: "Job application deleted",
+        description: `${job.jobTitle} at ${job.company}`,
       });
 
     return res.status(200).json({

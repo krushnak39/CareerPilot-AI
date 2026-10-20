@@ -21,7 +21,9 @@ export const login = async (userData) => {
 };
 
 // Google Login
-export const googleLogin = async (credential) => {
+export const googleLogin = async (
+  credential
+) => {
   const response = await api.post(
     "/auth/google",
     {
@@ -33,7 +35,9 @@ export const googleLogin = async (credential) => {
 };
 
 // GitHub Login
-export const githubLogin = async (code) => {
+export const githubLogin = async (
+  code
+) => {
   const response = await api.post(
     "/auth/github",
     {
@@ -45,7 +49,9 @@ export const githubLogin = async (code) => {
 };
 
 // LinkedIn Login
-export const linkedinLogin = async (code) => {
+export const linkedinLogin = async (
+  code
+) => {
   const response = await api.post(
     "/auth/linkedin",
     {
@@ -69,6 +75,19 @@ export const unlinkGoogle = async () => {
 export const unlinkLinkedin = async () => {
   const response = await api.delete(
     "/auth/linkedin"
+  );
+
+  return response.data;
+};
+
+// Set password for accounts
+// that do not have a password
+export const setPassword = async (
+  passwordData
+) => {
+  const response = await api.put(
+    "/auth/set-password",
+    passwordData
   );
 
   return response.data;

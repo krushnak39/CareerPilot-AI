@@ -1,0 +1,103 @@
+[
+    {
+        "career": "Backend Developer",
+        "score": 80.0,
+        "readiness": "Highly Suitable",
+        "explanation": "You have a strong match for Backend Developer. Your skills cover most of the required skills.",
+        "matched_skills": [
+            "python",
+            "fastapi",
+            "sql",
+            "docker"
+        ],
+        "semantic_matches": [
+            {
+                "user_skill": "Python",
+                "required_skill": "python",
+                "score": 1.0
+            },
+            {
+                "user_skill": "FastAPI",
+                "required_skill": "fastapi",
+                "score": 1.0
+            },
+            {
+                "user_skill": "SQL",
+                "required_skill": "sql",
+                "score": 1.0
+            },
+            {
+                "user_skill": "Docker",
+                "required_skill": "docker",
+                "score": 1.0
+            }
+        ],
+        "missing_skills": [
+            "rest api"
+        ]
+    },
+    {
+        "career": "AI/ML Engineer",
+        "score": 60.0,
+        "readiness": "Suitable",
+        "explanation": "You have a good foundation for AI/ML Engineer. Develop the missing skills to become more job-ready.",
+        "matched_skills": [
+            "python",
+            "sql",
+            "machine learning"
+        ],
+        "semantic_matches": [
+            {
+                "user_skill": "Python",
+                "required_skill": "python",
+                "score": 1.0
+            },
+            {
+                "user_skill": "SQL",
+                "required_skill": "sql",
+                "score": 1.0
+            },
+            {
+                "user_skill": "Machine Learning",
+                "required_skill": "machine learning",
+                "score": 1.0
+            }
+        ],
+        "missing_skills": [
+            "tensorflow",
+            "pytorch"
+        ]
+    },
+    {
+        "career": "Data Scientist",
+        "score": 60.0,
+        "readiness": "Suitable",
+        "explanation": "You have a good foundation for Data Scientist. Develop the missing skills to become more job-ready.",
+        "matched_skills": [
+            "python",
+            "sql",
+            "machine learning"
+        ],
+        "semantic_matches": [
+            {
+                "user_skill": "Python",
+                "required_skill": "python",
+                "score": 1.0
+            },
+            {
+                "user_skill": "SQL",
+                "required_skill": "sql",
+                "score": 1.0
+            },
+            {
+                "user_skill": "Machine Learning",
+                "required_skill": "machine learning",
+                "score": 1.0
+            }
+        ],
+        "missing_skills": [
+            "pandas",
+            "numpy"
+        ]
+    }
+]

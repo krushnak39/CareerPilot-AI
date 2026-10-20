@@ -1,45 +1,134 @@
 const prisma = require("../config/prisma");
 
-const getDashboard = async (req, res) => {
-  console.log("Dashboard controller called");
+const percent = (part, total) =>
+  total > 0
+    ? Math.round((part / total) * 100)
+    : 0;
 
+const getDashboard = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Count user's resumes
-    const resumeCount = await prisma.resume.count({
-      where: {
-        userId: userId,
-      },
-    });
+    const [
+      resumeCount,
+      jobCount,
+      interviewCount,
+      completedInterviews,
+      roadmapCount,
+      studyMaterialCount,
+      totalTopics,
+      completedTopics,
+      latestAnalysis,
+    ] = await Promise.all([
+      prisma.resume.count({
+        where: { userId },
+      }),
+      prisma.jobApplication.count({
+        where: { userId },
+      }),
+      prisma.interviewSession.count({
+        where: { userId },
+      }),
+      prisma.interviewSession.count({
+        where: {
+          userId,
+          status: "COMPLETED",
+        },
+      }),
+      prisma.learningRoadmap.count({
+        where: { userId },
+      }),
+      prisma.studyMaterial.count({
+        where: { userId },
+      }),
+      prisma.roadmapTopic.count({
+        where: {
+          module: { roadmap: { userId } },
+        },
+      }),
+      prisma.roadmapTopic.count({
+        where: {
+          completed: true,
+          module: { roadmap: { userId } },
+        },
+      }),
+      prisma.userActivity.findFirst({
+        where: {
+          userId,
+          type: "RESUME_ANALYSIS",
+        },
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
 
-    // Count user's jobs
-    const jobCount = await prisma.jobApplication.count({
-      where: {
-        userId: userId,
-      },
-    });
+    const meta = latestAnalysis?.metadata || {};
 
-    // Count user's interviews
-    const interviewCount = await prisma.interviewSession.count({
-      where: {
-        userId: userId,
-      },
-    });
+    const analysis = latestAnalysis
+      ? {
+          analyzedAt: latestAnalysis.createdAt,
+          resumeTitle: meta.resumeTitle || null,
+          domain: meta.domain || null,
+          skillsCount: meta.skillsCount || 0,
+          topCareer: meta.topCareer || null,
+          topMatch: meta.topMatch ?? null,
+          atsScore: meta.atsScore ?? null,
+          skillGaps: meta.skillGaps ?? 0,
+        }
+      : null;
 
-    res.status(200).json({
+    const learningProgress = percent(
+      completedTopics,
+      totalTopics
+    );
+
+    const interviewProgress = percent(
+      completedInterviews,
+      interviewCount
+    );
+
+    // Every value is calculated from the user's real data.
+    // No data yet = 0, never a made-up number.
+    const chart = [
+      {
+        name: "Career Match",
+        score: Math.round(
+          Number(analysis?.topMatch) || 0
+        ),
+      },
+      {
+        name: "ATS Match",
+        score: Math.round(
+          Number(analysis?.atsScore) || 0
+        ),
+      },
+      {
+        name: "Learning",
+        score: learningProgress,
+      },
+      {
+        name: "Interview",
+        score: interviewProgress,
+      },
+    ];
+
+    return res.status(200).json({
       success: true,
       data: {
-        resumeCount: resumeCount,
-        jobCount: jobCount,
-        interviewCount: interviewCount,
+        resumeCount,
+        jobCount,
+        interviewCount,
+        roadmapCount,
+        studyMaterialCount,
+        learningProgress,
+        interviewProgress,
+        analysis,
+        chart,
       },
     });
-
   } catch (error) {
     console.error("Dashboard error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Failed to load dashboard",
     });

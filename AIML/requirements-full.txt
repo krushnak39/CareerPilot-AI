@@ -1,0 +1,10 @@
+# Full ML set (semantic embeddings, RAG study-material module).
+# Needs ~2 GB+ RAM; use a paid instance if you install these.
+-r requirements.txt
+PyMuPDF
+sentence-transformers
+faiss-cpu
+numpy
+python-docx
+python-pptx
+requests

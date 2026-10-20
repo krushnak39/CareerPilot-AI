@@ -1,0 +1,15 @@
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    AIML_LIGHT_MODE=1 \
+    PYTHONPATH=/app
+
+WORKDIR /app
+
+COPY AIML/requirements.txt /app/AIML/requirements.txt
+RUN pip install --no-cache-dir -r /app/AIML/requirements.txt
+
+COPY AIML /app/AIML
+
+EXPOSE 8000
+CMD ["sh", "-c", "gunicorn AIML.api:app --bind 0.0.0.0:${PORT:-8000} --workers 1 --threads 4 --timeout 180"]

@@ -15,6 +15,10 @@ const {
   updateResumeTitleController,
 } = require("../controllers/resume.controller");
 
+const {
+  analyzeResume,
+} = require("../controllers/resumeAnalysis.controller");
+
 const authMiddleware =
   require("../middleware/auth.middleware");
 
@@ -147,6 +151,16 @@ router.get(
   "/:id/history",
   authMiddleware,
   getResumeHistoryController
+);
+
+// ==========================
+// ANALYZE RESUME (AI / ATS)
+// POST /api/resumes/:id/analyze
+// ==========================
+router.post(
+  "/:id/analyze",
+  authMiddleware,
+  analyzeResume
 );
 
 // ==========================

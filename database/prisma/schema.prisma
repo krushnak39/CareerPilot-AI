@@ -7,22 +7,26 @@ datasource db {
 }
 
 model User {
-  id               String             @id @default(uuid()) @db.Uuid
-  name             String
-  email            String             @unique
-  passwordHash     String
-  isActive         Boolean            @default(true)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  interviews       Interview[]
-  learningProgress LearningProgress[]
-  notifications    Notification[]
-  profile          Profile?
-  resumes          Resume[]
-  settings         Settings?
-  skillGaps        SkillGap[]
-  activities       UserActivity[]
-  userSkills       UserSkill[]
+  id         String   @id @default(cuid())
+  fullName   String
+  email      String   @unique
+  password   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  provider   String   @default("credentials")
+  githubId    String?  @unique
+  googleId    String?  @unique
+  linkedinId String?  @unique
+
+  resetPasswordToken   String?
+  resetPasswordExpires DateTime?
+
+  resumes           Resume[]
+  profile           UserProfile?
+  careerPreference  CareerPreference?
+  jobApplications   JobApplication[]
+  interviewSessions InterviewSession[]
+  studyMaterials    StudyMaterial[]
 }
 
 model Profile {
@@ -227,4 +231,23 @@ model Notification {
 
   @@index([userId, isRead])
   @@index([userId, createdAt])
+}
+
+
+model StudyMaterial {
+  id        String   @id @default(cuid())
+  userId    String
+
+  title     String?
+  fileName  String
+  fileUrl   String
+  fileType  String
+  fileSize  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

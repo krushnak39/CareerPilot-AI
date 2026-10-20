@@ -36,6 +36,7 @@ import {
 
 import {
   changePassword,
+  setPassword,
 } from "../api/auth";
 
 function Setting() {
@@ -75,6 +76,16 @@ function Setting() {
     changingPassword,
     setChangingPassword,
   ] = useState(false);
+
+  // ==========================
+  // PASSWORD STATUS
+  // ==========================
+  const [
+    hasPassword,
+    setHasPassword,
+  ] = useState(
+    user?.provider !== "google"
+  );
 
   // ==========================
   // PROFILE FORM
@@ -257,7 +268,7 @@ function Setting() {
             notificationResponse
               ?.data
               ?.notificationsEnabled ??
-              true
+            true
           );
         } catch (err) {
           console.error(
@@ -396,7 +407,7 @@ function Setting() {
         toast.error(
           err.response?.data
             ?.message ||
-            "Unable to update notification preference."
+          "Unable to update notification preference."
         );
       } finally {
         setSavingNotifications(
@@ -452,8 +463,7 @@ function Setting() {
             profileForm.degree,
 
           graduationYear:
-            profileForm
-              .graduationYear,
+            profileForm.graduationYear,
 
           skills,
         });
@@ -463,8 +473,7 @@ function Setting() {
             careerForm.targetRole,
 
           preferredLocation:
-            careerForm
-              .preferredLocation,
+            careerForm.preferredLocation,
 
           workMode:
             careerForm.workMode,
@@ -473,8 +482,7 @@ function Setting() {
             careerForm.jobType,
 
           experienceLevel:
-            careerForm
-              .experienceLevel,
+            careerForm.experienceLevel,
 
           industries,
         });
@@ -491,7 +499,7 @@ function Setting() {
         toast.error(
           err.response?.data
             ?.message ||
-            "Unable to save settings."
+          "Unable to save settings."
         );
       } finally {
         setSaving(false);
@@ -499,17 +507,27 @@ function Setting() {
     };
 
   // ==========================
-  // CHANGE PASSWORD
+  // SET / CHANGE PASSWORD
   // ==========================
-  const handleChangePassword =
+  const handlePasswordSubmit =
     async () => {
       if (
-        !passwordForm.currentPassword ||
         !passwordForm.newPassword ||
         !passwordForm.confirmPassword
       ) {
         toast.error(
           "Please fill in all password fields."
+        );
+
+        return;
+      }
+
+      if (
+        hasPassword &&
+        !passwordForm.currentPassword
+      ) {
+        toast.error(
+          "Please enter your current password."
         );
 
         return;
@@ -526,21 +544,63 @@ function Setting() {
         return;
       }
 
+      if (
+        passwordForm.newPassword.length <
+        8
+      ) {
+        toast.error(
+          "Password must be at least 8 characters long."
+        );
+
+        return;
+      }
+
+      if (
+        !/[A-Za-z]/.test(
+          passwordForm.newPassword
+        ) ||
+        !/[0-9]/.test(
+          passwordForm.newPassword
+        )
+      ) {
+        toast.error(
+          "Password must contain at least one letter and one number."
+        );
+
+        return;
+      }
+
       try {
         setChangingPassword(true);
 
-        const response =
-          await changePassword({
-            currentPassword:
-              passwordForm.currentPassword,
+        let response;
 
-            newPassword:
-              passwordForm.newPassword,
-          });
+        if (hasPassword) {
+          response =
+            await changePassword({
+              currentPassword:
+                passwordForm.currentPassword,
+
+              newPassword:
+                passwordForm.newPassword,
+            });
+        } else {
+          response =
+            await setPassword({
+              newPassword:
+                passwordForm.newPassword,
+            });
+
+          setHasPassword(true);
+        }
 
         toast.success(
           response.message ||
-            "Password changed successfully."
+          (
+            hasPassword
+              ? "Password changed successfully."
+              : "Password set successfully."
+          )
         );
 
         setPasswordForm({
@@ -552,14 +612,18 @@ function Setting() {
         setShowPasswordForm(false);
       } catch (err) {
         console.error(
-          "Change Password Error:",
+          "Password Update Error:",
           err
         );
 
         toast.error(
           err.response?.data
             ?.message ||
-            "Unable to change password."
+          (
+            hasPassword
+              ? "Unable to change password."
+              : "Unable to set password."
+          )
         );
       } finally {
         setChangingPassword(false);
@@ -1405,7 +1469,9 @@ function Setting() {
 
             {showPasswordForm
               ? "Cancel"
-              : "Change Password"}
+              : hasPassword
+                ? "Change Password"
+                : "Set Password"}
 
           </button>
 
@@ -1414,24 +1480,41 @@ function Setting() {
         {showPasswordForm && (
           <div className="grid grid-cols-1 gap-4 pt-3 border-t border-slate-100 dark:border-slate-800">
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                Current Password
-              </label>
+            {!hasPassword && (
+              <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-xl px-4 py-3">
 
-              <input
-                type="password"
-                name="currentPassword"
-                value={
-                  passwordForm.currentPassword
-                }
-                onChange={
-                  handlePasswordChange
-                }
-                autoComplete="current-password"
-                className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-              />
-            </div>
+                <p className="text-xs font-semibold text-blue-700 dark:text-blue-400">
+                  You currently sign in with Google.
+                </p>
+
+                <p className="text-[11px] text-blue-600/80 dark:text-blue-400/80 mt-1">
+                  Set a password to also sign in
+                  using your email and password.
+                </p>
+
+              </div>
+            )}
+
+            {hasPassword && (
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Current Password
+                </label>
+
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={
+                    passwordForm.currentPassword
+                  }
+                  onChange={
+                    handlePasswordChange
+                  }
+                  autoComplete="current-password"
+                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+              </div>
+            )}
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
@@ -1448,6 +1531,7 @@ function Setting() {
                   handlePasswordChange
                 }
                 autoComplete="new-password"
+                placeholder="At least 8 characters"
                 className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               />
             </div>
@@ -1467,6 +1551,7 @@ function Setting() {
                   handlePasswordChange
                 }
                 autoComplete="new-password"
+                placeholder="Enter password again"
                 className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               />
             </div>
@@ -1476,7 +1561,7 @@ function Setting() {
               <button
                 type="button"
                 onClick={
-                  handleChangePassword
+                  handlePasswordSubmit
                 }
                 disabled={
                   changingPassword
@@ -1496,8 +1581,12 @@ function Setting() {
                 )}
 
                 {changingPassword
-                  ? "Changing..."
-                  : "Update Password"}
+                  ? hasPassword
+                    ? "Changing..."
+                    : "Setting..."
+                  : hasPassword
+                    ? "Update Password"
+                    : "Set Password"}
 
               </button>
 

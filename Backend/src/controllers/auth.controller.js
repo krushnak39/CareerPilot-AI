@@ -6,6 +6,7 @@ const {
   linkedinLoginUser,
   unlinkGoogleUser,
   unlinkLinkedinUser,
+  setPasswordUser,
   changePasswordUser,
   forgotPasswordUser,
   resetPasswordUser,
@@ -217,6 +218,41 @@ const getCurrentUser = async (
 };
 
 // ==========================
+// SET PASSWORD
+// ==========================
+const setPassword = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const {
+      newPassword,
+    } = req.body || {};
+
+    await setPasswordUser({
+      userId:
+        req.user.id,
+
+      newPassword,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Password set successfully",
+    });
+  } catch (error) {
+    console.error(
+      "Set Password Error:",
+      error.message
+    );
+
+    return next(error);
+  }
+};
+
+// ==========================
 // CHANGE PASSWORD
 // ==========================
 const changePassword = async (
@@ -392,6 +428,7 @@ module.exports = {
   githubLogin,
   linkedinLogin,
   getCurrentUser,
+  setPassword,
   changePassword,
   forgotPassword,
   resetPassword,

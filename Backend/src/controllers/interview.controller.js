@@ -6,6 +6,8 @@ const {
   deleteInterviewSession,
 } = require("../services/interview.service");
 
+const { createActivity } = require("../services/activity.service");
+
 // ==========================
 // CREATE INTERVIEW SESSION
 // ==========================
@@ -37,6 +39,13 @@ const createInterview = async (
         status,
         scheduledAt,
         notes,
+      });
+
+      await createActivity({
+        userId: req.user.id,
+        type: "INTERVIEW_CREATED",
+        title: "Interview session created",
+        description: `${interview.title}${interview.company ? ` at ${interview.company}` : ""}`,
       });
 
     return res.status(201).json({
@@ -151,6 +160,13 @@ const updateInterview = async (
         notes,
       });
 
+      await createActivity({
+        userId: req.user.id,
+        type: "INTERVIEW_UPDATED",
+        title: "Interview session updated",
+        description: `${interview.title}${interview.company ? ` at ${interview.company}` : ""}`,
+      });
+
     return res.status(200).json({
       success: true,
       message:
@@ -183,6 +199,13 @@ const removeInterview = async (
 
         userId:
           req.user.id,
+      });
+
+      await createActivity({
+        userId: req.user.id,
+        type: "INTERVIEW_DELETED",
+        title: "Interview session deleted",
+        description: `${interview.title}${interview.company ? ` at ${interview.company}` : ""}`,
       });
 
     return res.status(200).json({

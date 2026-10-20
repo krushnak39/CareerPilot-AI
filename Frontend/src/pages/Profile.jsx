@@ -9,10 +9,33 @@ import {
   Edit,
   Sparkles,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
+import { getDashboard } from "../api/dashboard";
 
 function Profile() {
   const { user, loading } = useUser();
+
+  const [summary, setSummary] = useState(null);
+
+  useEffect(() => {
+    const loadSummary = async () => {
+      try {
+        const response = await getDashboard();
+        setSummary(response?.data?.data || null);
+      } catch (error) {
+        console.error("Profile summary error:", error);
+      }
+    };
+
+    loadSummary();
+  }, []);
+
+  const analysis = summary?.analysis;
+  const pct = (value) =>
+    value === null || value === undefined
+      ? "—"
+      : `${Math.round(value)}%`;
 
   if (loading) {
     return (
@@ -25,8 +48,8 @@ function Profile() {
   const userName = user?.fullName || user?.name || "User";
   const userGoal = user?.careerGoal || "CareerPilot AI Candidate";
   const userEmail = user?.email || "No email provided";
-  const userPhone = user?.phone || "+91 XXXXX XXXXX";
-  const userLocation = user?.location || "India";
+  const userPhone = user?.phone || "Not added";
+  const userLocation = user?.location || "Not added";
   const joinedDate = user?.createdAt
     ? `Joined ${user.createdAt.slice(0, 10)}`
     : "Joined Recently";
@@ -118,11 +141,11 @@ function Profile() {
               <div className="space-y-3.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                 <div className="flex items-center gap-3">
                   <GraduationCap size={18} className="text-blue-500 shrink-0" />
-                  <span>{user?.education || "B.Tech Computer Engineering"}</span>
+                  <span>{user?.education || "Not added"}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Briefcase size={18} className="text-blue-500 shrink-0" />
-                  <span>{user?.jobTitle || "Software Engineer Candidate"}</span>
+                  <span>{user?.jobTitle || "Not added"}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <User size={18} className="text-blue-500 shrink-0" />
@@ -136,16 +159,16 @@ function Profile() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200/50 dark:border-blue-900/30 rounded-2xl p-4 text-center">
               <h4 className="text-2xl font-black text-blue-600 dark:text-blue-400">
-                82%
+                {pct(analysis?.topMatch)}
               </h4>
               <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-1">
-                Resume Score
+                Top Career Match
               </p>
             </div>
 
             <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/50 dark:border-emerald-900/30 rounded-2xl p-4 text-center">
               <h4 className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
-                78%
+                {pct(analysis?.atsScore)}
               </h4>
               <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-1">
                 ATS Score
@@ -154,7 +177,7 @@ function Profile() {
 
             <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200/50 dark:border-purple-900/30 rounded-2xl p-4 text-center">
               <h4 className="text-2xl font-black text-purple-600 dark:text-purple-400">
-                65%
+                {pct(summary?.learningProgress ?? 0)}
               </h4>
               <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-1">
                 Learning Progress
@@ -163,7 +186,7 @@ function Profile() {
 
             <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200/50 dark:border-amber-900/30 rounded-2xl p-4 text-center">
               <h4 className="text-2xl font-black text-amber-600 dark:text-amber-400">
-                12
+                {analysis ? analysis.skillGaps : "—"}
               </h4>
               <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-1">
                 Skill Gaps

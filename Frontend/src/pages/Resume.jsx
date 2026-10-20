@@ -40,92 +40,100 @@ import {
 } from "../api/resume";
 
 import ConfirmModal from "../components/ConfirmModal";
+import ResumeAnalysis from "../components/ResumeAnalysis";
+
+function ResumeSkeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3].map((item) => (
+        <div
+          key={item}
+          className="rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 p-4 animate-pulse"
+        >
+          <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-4">
+            <div className="flex items-start gap-3 min-w-0 flex-1">
+              <div className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0" />
+
+              <div className="flex-1 space-y-3">
+                <div className="h-4 w-48 bg-slate-200 dark:bg-slate-700 rounded" />
+
+                <div className="flex gap-3">
+                  <div className="h-3 w-20 bg-slate-200 dark:bg-slate-700 rounded" />
+                  <div className="h-3 w-24 bg-slate-200 dark:bg-slate-700 rounded" />
+                  <div className="h-3 w-32 bg-slate-200 dark:bg-slate-700 rounded" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <div className="h-9 w-24 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+              <div className="h-9 w-20 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+              <div className="h-9 w-20 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Resume() {
-  const [
-    selectedFile,
-    setSelectedFile,
-  ] = useState(null);
+  const [selectedFile, setSelectedFile] =
+    useState(null);
 
-  const [
-    uploadTitle,
-    setUploadTitle,
-  ] = useState("");
+  const [uploadTitle, setUploadTitle] =
+    useState("");
 
-  const [
-    resumes,
-    setResumes,
-  ] = useState([]);
+  const [resumes, setResumes] =
+    useState([]);
 
-  const [
-    uploading,
-    setUploading,
-  ] = useState(false);
+  // ==========================
+  // RESUME SORTING
+  // ==========================
+  const [sortOption, setSortOption] =
+    useState("newest");
 
-  const [
-    loadingResumes,
-    setLoadingResumes,
-  ] = useState(true);
+  const [uploading, setUploading] =
+    useState(false);
 
-  const [
-    deletingId,
-    setDeletingId,
-  ] = useState(null);
+  const [loadingResumes, setLoadingResumes] =
+    useState(true);
 
-  const [
-    pendingDeleteResume,
-    setPendingDeleteResume,
-  ] = useState(null);
+  const [deletingId, setDeletingId] =
+    useState(null);
 
-  const [
-    replacingId,
-    setReplacingId,
-  ] = useState(null);
+  const [pendingDeleteResume, setPendingDeleteResume] =
+    useState(null);
 
-  const [
-    settingPrimaryId,
-    setSettingPrimaryId,
-  ] = useState(null);
+  const [replacingId, setReplacingId] =
+    useState(null);
 
-  const [
-    editingTitleId,
-    setEditingTitleId,
-  ] = useState(null);
+  const [settingPrimaryId, setSettingPrimaryId] =
+    useState(null);
 
-  const [
-    editingTitle,
-    setEditingTitle,
-  ] = useState("");
+  const [editingTitleId, setEditingTitleId] =
+    useState(null);
 
-  const [
-    savingTitleId,
-    setSavingTitleId,
-  ] = useState(null);
+  const [editingTitle, setEditingTitle] =
+    useState("");
 
-  const [
-    resumeToReplace,
-    setResumeToReplace,
-  ] = useState(null);
+  const [savingTitleId, setSavingTitleId] =
+    useState(null);
 
-  const [
-    openHistoryId,
-    setOpenHistoryId,
-  ] = useState(null);
+  const [resumeToReplace, setResumeToReplace] =
+    useState(null);
 
-  const [
-    historyLoadingId,
-    setHistoryLoadingId,
-  ] = useState(null);
+  const [openHistoryId, setOpenHistoryId] =
+    useState(null);
 
-  const [
-    historyByResume,
-    setHistoryByResume,
-  ] = useState({});
+  const [historyLoadingId, setHistoryLoadingId] =
+    useState(null);
 
-  const [
-    error,
-    setError,
-  ] = useState("");
+  const [historyByResume, setHistoryByResume] =
+    useState({});
+
+  const [error, setError] =
+    useState("");
 
   const fileInputRef =
     useRef(null);
@@ -136,9 +144,7 @@ function Resume() {
   // ==========================
   // FORMAT FILE SIZE
   // ==========================
-  const formatFileSize = (
-    bytes
-  ) => {
+  const formatFileSize = (bytes) => {
     if (
       bytes === null ||
       bytes === undefined
@@ -150,29 +156,21 @@ function Resume() {
       return "0 KB";
     }
 
-    const kb =
-      bytes / 1024;
+    const kb = bytes / 1024;
 
     if (kb < 1024) {
-      return `${kb.toFixed(
-        1
-      )} KB`;
+      return `${kb.toFixed(1)} KB`;
     }
 
-    const mb =
-      kb / 1024;
+    const mb = kb / 1024;
 
-    return `${mb.toFixed(
-      2
-    )} MB`;
+    return `${mb.toFixed(2)} MB`;
   };
 
   // ==========================
   // FORMAT FILE TYPE
   // ==========================
-  const formatFileType = (
-    fileType
-  ) => {
+  const formatFileType = (fileType) => {
     if (
       fileType ===
       "application/pdf"
@@ -180,24 +178,18 @@ function Resume() {
       return "PDF";
     }
 
-    return (
-      fileType || "Unknown"
-    );
+    return fileType || "Unknown";
   };
 
   // ==========================
   // FORMAT DATE
   // ==========================
-  const formatDate = (
-    date
-  ) => {
+  const formatDate = (date) => {
     if (!date) {
       return "Unknown";
     }
 
-    return new Date(
-      date
-    ).toLocaleString(
+    return new Date(date).toLocaleString(
       undefined,
       {
         day: "2-digit",
@@ -212,52 +204,110 @@ function Resume() {
   // ==========================
   // LOAD USER RESUMES
   // ==========================
-  const fetchResumes =
-    async () => {
-      try {
-        setLoadingResumes(
-          true
-        );
+  const fetchResumes = async () => {
+    try {
+      setLoadingResumes(true);
+      setError("");
 
-        setError("");
+      const response =
+        await getResumes();
 
-        const response =
-          await getResumes();
+      setResumes(
+        response.data || []
+      );
+    } catch (err) {
+      console.error(
+        "Fetch Resumes Error:",
+        err
+      );
 
-        setResumes(
-          response.data || []
-        );
-      } catch (err) {
-        console.error(
-          "Fetch Resumes Error:",
-          err
-        );
+      const message =
+        err.response?.data?.message ||
+        "Unable to load your resumes.";
 
-        const message =
-          err.response?.data
-            ?.message ||
-          "Unable to load your resumes.";
-
-        setError(message);
-
-        toast.error(message);
-      } finally {
-        setLoadingResumes(
-          false
-        );
-      }
-    };
+      setError(message);
+      toast.error(message);
+    } finally {
+      setLoadingResumes(false);
+    }
+  };
 
   useEffect(() => {
     fetchResumes();
   }, []);
 
   // ==========================
+  // SORT RESUMES
+  // ==========================
+  const sortedResumes =
+    [...resumes].sort(
+      (a, b) => {
+        if (
+          sortOption === "newest"
+        ) {
+          return (
+            new Date(b.createdAt) -
+            new Date(a.createdAt)
+          );
+        }
+
+        if (
+          sortOption === "oldest"
+        ) {
+          return (
+            new Date(a.createdAt) -
+            new Date(b.createdAt)
+          );
+        }
+
+        if (
+          sortOption === "title-asc"
+        ) {
+          const titleA = (
+            a.title ||
+            a.fileName ||
+            ""
+          ).toLowerCase();
+
+          const titleB = (
+            b.title ||
+            b.fileName ||
+            ""
+          ).toLowerCase();
+
+          return titleA.localeCompare(
+            titleB
+          );
+        }
+
+        if (
+          sortOption === "title-desc"
+        ) {
+          const titleA = (
+            a.title ||
+            a.fileName ||
+            ""
+          ).toLowerCase();
+
+          const titleB = (
+            b.title ||
+            b.fileName ||
+            ""
+          ).toLowerCase();
+
+          return titleB.localeCompare(
+            titleA
+          );
+        }
+
+        return 0;
+      }
+    );
+
+  // ==========================
   // SELECT NEW RESUME
   // ==========================
-  const handleFileChange = (
-    e
-  ) => {
+  const handleFileChange = (e) => {
     const file =
       e.target.files?.[0];
 
@@ -271,9 +321,7 @@ function Resume() {
       file.type !==
       "application/pdf"
     ) {
-      setSelectedFile(
-        null
-      );
+      setSelectedFile(null);
 
       toast.error(
         "Only PDF resumes are currently supported."
@@ -288,9 +336,7 @@ function Resume() {
       file.size >
       5 * 1024 * 1024
     ) {
-      setSelectedFile(
-        null
-      );
+      setSelectedFile(null);
 
       toast.error(
         "Resume must be smaller than 5 MB."
@@ -301,9 +347,7 @@ function Resume() {
       return;
     }
 
-    setSelectedFile(
-      file
-    );
+    setSelectedFile(file);
 
     if (!uploadTitle) {
       const defaultTitle =
@@ -326,9 +370,7 @@ function Resume() {
     setUploadTitle("");
     setError("");
 
-    if (
-      fileInputRef.current
-    ) {
+    if (fileInputRef.current) {
       fileInputRef.current.value =
         "";
     }
@@ -337,76 +379,64 @@ function Resume() {
   // ==========================
   // UPLOAD NEW RESUME
   // ==========================
-  const handleUpload =
-    async () => {
-      if (!selectedFile) {
-        toast.error(
-          "Please choose a resume first."
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error(
+        "Please choose a resume first."
+      );
+
+      return;
+    }
+
+    if (
+      uploadTitle.trim().length >
+      100
+    ) {
+      toast.error(
+        "Resume title must be 100 characters or fewer."
+      );
+
+      return;
+    }
+
+    try {
+      setUploading(true);
+      setError("");
+
+      const response =
+        await uploadResume(
+          selectedFile,
+          uploadTitle
         );
 
-        return;
+      toast.success(
+        response.message ||
+          "Resume uploaded successfully."
+      );
+
+      setSelectedFile(null);
+      setUploadTitle("");
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value =
+          "";
       }
 
-      if (
-        uploadTitle.trim()
-          .length > 100
-      ) {
-        toast.error(
-          "Resume title must be 100 characters or fewer."
-        );
+      await fetchResumes();
+    } catch (err) {
+      console.error(
+        "Resume Upload Error:",
+        err
+      );
 
-        return;
-      }
-
-      try {
-        setUploading(
-          true
-        );
-
-        setError("");
-
-        const response =
-          await uploadResume(
-            selectedFile,
-            uploadTitle
-          );
-
-        toast.success(
-          response.message ||
-            "Resume uploaded successfully."
-        );
-
-        setSelectedFile(
-          null
-        );
-
-        setUploadTitle("");
-
-        if (
-          fileInputRef.current
-        ) {
-          fileInputRef.current.value =
-            "";
-        }
-
-        await fetchResumes();
-      } catch (err) {
-        console.error(
-          "Resume Upload Error:",
-          err
-        );
-
-        toast.error(
-          err.response?.data
-            ?.message ||
-            "Resume upload failed. Please try again."
-        );
-      } finally {
-        setUploading(
-          false
-        );
-      }
-    };
+      toast.error(
+        err.response?.data?.message ||
+          "Resume upload failed. Please try again."
+      );
+    } finally {
+      setUploading(false);
+    }
+  };
 
   // ==========================
   // START TITLE EDIT
@@ -428,14 +458,10 @@ function Resume() {
   // ==========================
   // CANCEL TITLE EDIT
   // ==========================
-  const cancelEditTitle =
-    () => {
-      setEditingTitleId(
-        null
-      );
-
-      setEditingTitle("");
-    };
+  const cancelEditTitle = () => {
+    setEditingTitleId(null);
+    setEditingTitle("");
+  };
 
   // ==========================
   // SAVE TITLE
@@ -443,8 +469,8 @@ function Resume() {
   const handleSaveTitle =
     async (resumeId) => {
       if (
-        editingTitle.trim()
-          .length > 100
+        editingTitle.trim().length >
+        100
       ) {
         toast.error(
           "Resume title must be 100 characters or fewer."
@@ -471,10 +497,7 @@ function Resume() {
             "Resume title updated successfully."
         );
 
-        setEditingTitleId(
-          null
-        );
-
+        setEditingTitleId(null);
         setEditingTitle("");
 
         await fetchResumes();
@@ -485,14 +508,11 @@ function Resume() {
         );
 
         toast.error(
-          err.response?.data
-            ?.message ||
+          err.response?.data?.message ||
             "Unable to update resume title."
         );
       } finally {
-        setSavingTitleId(
-          null
-        );
+        setSavingTitleId(null);
       }
     };
 
@@ -526,14 +546,11 @@ function Resume() {
         );
 
         toast.error(
-          err.response?.data
-            ?.message ||
+          err.response?.data?.message ||
             "Unable to set primary resume."
         );
       } finally {
-        setSettingPrimaryId(
-          null
-        );
+        setSettingPrimaryId(null);
       }
     };
 
@@ -549,9 +566,7 @@ function Resume() {
       resume
     );
 
-    if (
-      replaceInputRef.current
-    ) {
+    if (replaceInputRef.current) {
       replaceInputRef.current.value =
         "";
 
@@ -584,12 +599,9 @@ function Resume() {
           "Only PDF resumes are currently supported."
         );
 
-        e.target.value =
-          "";
+        e.target.value = "";
 
-        setResumeToReplace(
-          null
-        );
+        setResumeToReplace(null);
 
         return;
       }
@@ -602,12 +614,9 @@ function Resume() {
           "Resume must be smaller than 5 MB."
         );
 
-        e.target.value =
-          "";
+        e.target.value = "";
 
-        setResumeToReplace(
-          null
-        );
+        setResumeToReplace(null);
 
         return;
       }
@@ -632,13 +641,10 @@ function Resume() {
         );
 
         setHistoryByResume(
-          (
-            currentHistory
-          ) => {
-            const updatedHistory =
-              {
-                ...currentHistory,
-              };
+          (currentHistory) => {
+            const updatedHistory = {
+              ...currentHistory,
+            };
 
             delete updatedHistory[
               resumeId
@@ -648,9 +654,7 @@ function Resume() {
           }
         );
 
-        setOpenHistoryId(
-          null
-        );
+        setOpenHistoryId(null);
 
         await fetchResumes();
       } catch (err) {
@@ -660,18 +664,12 @@ function Resume() {
         );
 
         toast.error(
-          err.response?.data
-            ?.message ||
+          err.response?.data?.message ||
             "Unable to replace resume."
         );
       } finally {
-        setReplacingId(
-          null
-        );
-
-        setResumeToReplace(
-          null
-        );
+        setReplacingId(null);
+        setResumeToReplace(null);
 
         if (
           replaceInputRef.current
@@ -698,16 +696,13 @@ function Resume() {
   // ==========================
   // CANCEL DELETE
   // ==========================
-  const cancelDeleteResume =
-    () => {
-      if (deletingId) {
-        return;
-      }
+  const cancelDeleteResume = () => {
+    if (deletingId) {
+      return;
+    }
 
-      setPendingDeleteResume(
-        null
-      );
-    };
+    setPendingDeleteResume(null);
+  };
 
   // ==========================
   // CONFIRM DELETE
@@ -736,13 +731,10 @@ function Resume() {
           );
 
         setHistoryByResume(
-          (
-            currentHistory
-          ) => {
-            const updatedHistory =
-              {
-                ...currentHistory,
-              };
+          (currentHistory) => {
+            const updatedHistory = {
+              ...currentHistory,
+            };
 
             delete updatedHistory[
               resumeId
@@ -756,9 +748,7 @@ function Resume() {
           openHistoryId ===
           resumeId
         ) {
-          setOpenHistoryId(
-            null
-          );
+          setOpenHistoryId(null);
         }
 
         toast.success(
@@ -778,14 +768,11 @@ function Resume() {
         );
 
         toast.error(
-          err.response?.data
-            ?.message ||
+          err.response?.data?.message ||
             "Unable to delete resume."
         );
       } finally {
-        setDeletingId(
-          null
-        );
+        setDeletingId(null);
       }
     };
 
@@ -837,9 +824,7 @@ function Resume() {
             resumeId
           );
 
-        openPdfBlob(
-          response
-        );
+        openPdfBlob(response);
       } catch (err) {
         console.error(
           "View Resume Error:",
@@ -847,8 +832,7 @@ function Resume() {
         );
 
         toast.error(
-          err.response?.data
-            ?.message ||
+          err.response?.data?.message ||
             "Unable to view resume."
         );
       }
@@ -871,9 +855,7 @@ function Resume() {
             versionId
           );
 
-        openPdfBlob(
-          response
-        );
+        openPdfBlob(response);
       } catch (err) {
         console.error(
           "View Resume Version Error:",
@@ -881,8 +863,7 @@ function Resume() {
         );
 
         toast.error(
-          err.response?.data
-            ?.message ||
+          err.response?.data?.message ||
             "Unable to view resume version."
         );
       }
@@ -917,9 +898,7 @@ function Resume() {
           );
 
         link.href = url;
-
-        link.download =
-          fileName;
+        link.download = fileName;
 
         document.body.appendChild(
           link
@@ -942,8 +921,7 @@ function Resume() {
         );
 
         toast.error(
-          err.response?.data
-            ?.message ||
+          err.response?.data?.message ||
             "Unable to download resume."
         );
       }
@@ -958,10 +936,7 @@ function Resume() {
         openHistoryId ===
         resumeId
       ) {
-        setOpenHistoryId(
-          null
-        );
-
+        setOpenHistoryId(null);
         return;
       }
 
@@ -990,14 +965,10 @@ function Resume() {
           );
 
         setHistoryByResume(
-          (
-            currentHistory
-          ) => ({
+          (currentHistory) => ({
             ...currentHistory,
-
             [resumeId]:
-              response.data ||
-              [],
+              response.data || [],
           })
         );
       } catch (err) {
@@ -1007,18 +978,13 @@ function Resume() {
         );
 
         toast.error(
-          err.response?.data
-            ?.message ||
+          err.response?.data?.message ||
             "Unable to load resume history."
         );
 
-        setOpenHistoryId(
-          null
-        );
+        setOpenHistoryId(null);
       } finally {
-        setHistoryLoadingId(
-          null
-        );
+        setHistoryLoadingId(null);
       }
     };
 
@@ -1057,6 +1023,13 @@ function Resume() {
             AI.
           </p>
         </div>
+
+        {/* ==========================
+            AI ANALYSIS
+        ========================== */}
+        <ResumeAnalysis
+          resumes={resumes}
+        />
 
         {/* ==========================
             LOAD ERROR
@@ -1099,7 +1072,6 @@ function Resume() {
               <Upload
                 size={16}
               />
-
               Choose Resume
             </label>
 
@@ -1207,14 +1179,12 @@ function Resume() {
                   }
                   className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 transition disabled:opacity-50"
                 >
-
                   {uploading ? (
                     <>
                       <LoaderCircle
                         size={16}
                         className="animate-spin"
                       />
-
                       Uploading...
                     </>
                   ) : (
@@ -1222,11 +1192,9 @@ function Resume() {
                       <Upload
                         size={16}
                       />
-
                       Upload
                     </>
                   )}
-
                 </button>
 
               </div>
@@ -1244,7 +1212,6 @@ function Resume() {
           <div className="flex items-center justify-between mb-5">
 
             <div>
-
               <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                 Uploaded Resumes
               </h2>
@@ -1254,29 +1221,46 @@ function Resume() {
                 versions and your default
                 resume.
               </p>
-
             </div>
 
-            <div className="px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold">
-              {resumes.length}
+            {/* SORT DROPDOWN */}
+            <div className="flex items-center gap-2 shrink-0">
+
+              <select
+                value={sortOption}
+                onChange={(e) =>
+                  setSortOption(
+                    e.target.value
+                  )
+                }
+                className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-semibold text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+              >
+                <option value="newest">
+                  Newest First
+                </option>
+
+                <option value="oldest">
+                  Oldest First
+                </option>
+
+                <option value="title-asc">
+                  Title A–Z
+                </option>
+
+                <option value="title-desc">
+                  Title Z–A
+                </option>
+              </select>
+
+              <div className="px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold">
+                {resumes.length}
+              </div>
+
             </div>
 
           </div>
 
-          {loadingResumes && (
-            <div className="flex items-center justify-center gap-2 py-10 text-slate-400">
-
-              <LoaderCircle
-                size={18}
-                className="animate-spin"
-              />
-
-              <span className="text-xs font-semibold">
-                Loading resumes...
-              </span>
-
-            </div>
-          )}
+          {loadingResumes && <ResumeSkeleton />}
 
           {!loadingResumes &&
             resumes.length ===
@@ -1305,7 +1289,7 @@ function Resume() {
               0 && (
               <div className="space-y-4">
 
-                {resumes.map(
+                {sortedResumes.map(
                   (resume) => (
                     <div
                       key={
@@ -1365,9 +1349,7 @@ function Resume() {
                                       e
                                     ) =>
                                       setEditingTitle(
-                                        e
-                                          .target
-                                          .value
+                                        e.target.value
                                       )
                                     }
                                     className="w-full max-w-md px-3 py-2 rounded-lg border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-950 text-xs font-bold text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20"
@@ -1464,7 +1446,6 @@ function Resume() {
                                       />
 
                                       Primary
-
                                     </span>
                                   )}
 
@@ -1606,7 +1587,6 @@ function Resume() {
                                   15
                                 }
                               />
-
                               View
                             </button>
 
@@ -1625,7 +1605,6 @@ function Resume() {
                                   15
                                 }
                               />
-
                               Download
                             </button>
 
@@ -1851,8 +1830,7 @@ function Resume() {
                                             Version{" "}
                                             {historyByResume[
                                               resume.id
-                                            ]
-                                              .length -
+                                            ].length -
                                               index}
                                           </span>
 
@@ -1907,7 +1885,6 @@ function Resume() {
                                           14
                                         }
                                       />
-
                                       View
                                     </button>
 

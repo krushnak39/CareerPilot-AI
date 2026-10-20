@@ -5,14 +5,8 @@ const path = require("path");
 // ==========================
 // HELPER: URL -> LOCAL PATH
 // ==========================
-const getLocalFilePath = (
-  fileUrl
-) => {
-  const relativePath =
-    fileUrl.replace(
-      /^\/+/,
-      ""
-    );
+const getLocalFilePath = (fileUrl) => {
+  const relativePath = fileUrl.replace(/^\/+/, "");
 
   return path.join(
     process.cwd(),
