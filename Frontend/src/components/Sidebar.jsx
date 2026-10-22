@@ -11,6 +11,7 @@ import {
   Settings,
   LogOut,
   BrainCircuit,
+  BookOpenCheck,
   X,
 } from "lucide-react";
 
@@ -237,6 +238,15 @@ function Sidebar({
 
             Interview Prep
           </NavLink>
+
+          <NavLink
+  to="/interview-practice"
+  onClick={() => setSidebarOpen(false)}
+  className={navItemClass}
+>
+  <BookOpenCheck size={20} />
+  Interview Practice
+</NavLink>
 
           <NavLink
             to="/profile"

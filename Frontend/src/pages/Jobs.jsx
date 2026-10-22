@@ -209,74 +209,136 @@ function Jobs() {
   // SAVE JOB
   // ==========================
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+
+  const jobTitle = form.jobTitle.trim();
+  const company = form.company.trim();
+  const location = form.location.trim();
+  const jobType = form.jobType.trim();
+  const description = form.description.trim();
+  const status = form.status;
+  const appliedDate = form.appliedDate;
+
+  // Required fields
+  if (!jobTitle || !company) {
+    toast.error("Job title and company are required.");
+    return;
+  }
+
+  // Maximum character limits
+  if (jobTitle.length > 100) {
+    toast.error("Job title cannot exceed 100 characters.");
+    return;
+  }
+
+  if (company.length > 100) {
+    toast.error("Company name cannot exceed 100 characters.");
+    return;
+  }
+
+  if (location.length > 100) {
+    toast.error("Location cannot exceed 100 characters.");
+    return;
+  }
+
+  if (description.length > 2000) {
+    toast.error("Job description cannot exceed 2000 characters.");
+    return;
+  }
+
+  // Validate job type
+  const allowedJobTypes = [
+    "",
+    "Full Time",
+    "Part Time",
+    "Internship",
+    "Contract",
+  ];
+
+  if (!allowedJobTypes.includes(jobType)) {
+    toast.error("Please select a valid job type.");
+    return;
+  }
+
+  // Validate application status
+  const allowedStatuses = [
+    "SAVED",
+    "APPLIED",
+    "INTERVIEW",
+    "OFFER",
+    "REJECTED",
+  ];
+
+  if (!allowedStatuses.includes(status)) {
+    toast.error("Please select a valid application status.");
+    return;
+  }
+
+  // Validate applied date
+  if (appliedDate) {
+    const selectedDate = new Date(
+      `${appliedDate}T00:00:00`
+    );
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     if (
-      !form.jobTitle.trim() ||
-      !form.company.trim()
+      Number.isNaN(selectedDate.getTime()) ||
+      selectedDate > today
     ) {
       toast.error(
-        "Job title and company are required."
+        "Applied date cannot be in the future."
       );
-
       return;
     }
+  }
 
-    try {
-      setSaving(true);
-      setError("");
+  try {
+    setSaving(true);
+    setError("");
 
-      const payload = {
-        ...form,
+    const payload = {
+      ...form,
+      jobTitle,
+      company,
+      location,
+      jobType,
+      description,
+      appliedDate: appliedDate || null,
+    };
 
-        jobTitle: form.jobTitle.trim(),
+    let response;
 
-        company: form.company.trim(),
+    if (editingId) {
+      response = await updateJob(editingId, payload);
 
-        location: form.location.trim(),
-
-        jobType: form.jobType.trim(),
-
-        description: form.description.trim(),
-
-        appliedDate: form.appliedDate || null,
-      };
-
-      let response;
-
-      if (editingId) {
-        response = await updateJob(
-          editingId,
-          payload
-        );
-
-        toast.success(
-          response.message ||
-            "Job application updated successfully."
-        );
-      } else {
-        response = await createJob(payload);
-
-        toast.success(
-          response.message ||
-            "Job application created successfully."
-        );
-      }
-
-      resetForm();
-
-      await fetchJobs();
-    } catch (err) {
-      console.error("Save Job Error:", err);
-
-      toast.error(
-        err.response?.data?.message ||
-          "Unable to save job application."
+      toast.success(
+        response.message ||
+          "Job application updated successfully."
       );
-    } finally {
-      setSaving(false);
+    } else {
+      response = await createJob(payload);
+
+      toast.success(
+        response.message ||
+          "Job application created successfully."
+      );
     }
-  };
+
+    resetForm();
+    await fetchJobs();
+  } catch (err) {
+    console.error("Save Job Error:", err);
+
+    toast.error(
+      err.response?.data?.message ||
+        "Unable to save job application."
+    );
+  } finally {
+    setSaving(false);
+  }
+};
 
   // ==========================
   // QUICK STATUS UPDATE
