@@ -1,4 +1,33 @@
+
 const prisma = require("../config/prisma");
+
+// ==========================
+// HELPER: VALIDATE PROGRESS
+// ==========================
+const parseProgress = (value) => {
+  // Reject missing, empty, and unexpected input types.
+  if (
+    value === undefined ||
+    value === null ||
+    value === "" ||
+    (typeof value !== "number" && typeof value !== "string") ||
+    (typeof value === "string" && value.trim() === "")
+  ) {
+    return null;
+  }
+
+  const parsed = Number(value);
+
+  if (
+    !Number.isInteger(parsed) ||
+    parsed < 0 ||
+    parsed > 100
+  ) {
+    return null;
+  }
+
+  return parsed;
+};
 
 // ==========================
 // GET LEARNING RESOURCES
@@ -10,7 +39,6 @@ const getLearningResources = async (req, res, next) => {
       where: {
         isActive: true,
       },
-
       include: {
         LearningResourceSkill: {
           include: {
@@ -18,7 +46,6 @@ const getLearningResources = async (req, res, next) => {
           },
         },
       },
-
       orderBy: {
         createdAt: "desc",
       },
@@ -47,7 +74,18 @@ const startLearningResource = async (req, res, next) => {
     const { resourceId } = req.params;
     const userId = req.user.id;
 
-    // Check that the resource exists
+    // Validate the resource ID.
+    if (
+      typeof resourceId !== "string" ||
+      resourceId.trim() === ""
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid learning resource ID is required",
+      });
+    }
+
+    // Confirm the resource exists and is active.
     const resource = await prisma.learningResource.findUnique({
       where: {
         id: resourceId,
@@ -61,7 +99,10 @@ const startLearningResource = async (req, res, next) => {
       });
     }
 
-    // Create progress or return existing progress
+    const now = new Date();
+
+    // Create progress if missing.
+    // If progress already exists, preserve the original startedAt.
     const learningProgress =
       await prisma.learningProgress.upsert({
         where: {
@@ -70,18 +111,16 @@ const startLearningResource = async (req, res, next) => {
             resourceId,
           },
         },
-
         update: {
-          status: "in_progress",
-          startedAt: new Date(),
+          // Keep existing progress and timestamps.
+          // Restarting a resource must not reset its history.
         },
-
         create: {
           userId,
           resourceId,
           progress: 0,
           status: "in_progress",
-          startedAt: new Date(),
+          startedAt: now,
         },
       });
 
@@ -108,15 +147,29 @@ const updateLearningProgress = async (req, res, next) => {
   try {
     const { resourceId } = req.params;
     const userId = req.user.id;
-    const progress = Number(req.body.progress);
 
-    if (!Number.isInteger(progress) || progress < 0 || progress > 100) {
+    // Validate the resource ID.
+    if (
+      typeof resourceId !== "string" ||
+      resourceId.trim() === ""
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid learning resource ID is required",
+      });
+    }
+
+    // Validate progress without converting empty strings to zero.
+    const progress = parseProgress(req.body?.progress);
+
+    if (progress === null) {
       return res.status(400).json({
         success: false,
         message: "Progress must be an integer between 0 and 100",
       });
     }
 
+    // Only allow progress updates for resources the user has started.
     const existingProgress =
       await prisma.learningProgress.findUnique({
         where: {
@@ -130,7 +183,8 @@ const updateLearningProgress = async (req, res, next) => {
     if (!existingProgress) {
       return res.status(404).json({
         success: false,
-        message: "Learning progress not found. Start the resource first.",
+        message:
+          "Learning progress not found. Start the resource first.",
       });
     }
 
@@ -168,7 +222,9 @@ const updateLearningProgress = async (req, res, next) => {
   }
 };
 
-
+// ==========================
+// EXPORT CONTROLLERS
+// ==========================
 module.exports = {
   getLearningResources,
   startLearningResource,
