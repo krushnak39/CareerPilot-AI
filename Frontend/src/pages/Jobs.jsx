@@ -39,13 +39,13 @@ function JobSkeleton() {
           className="rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 p-4 animate-pulse"
         >
           <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-4">
-            
+
             <div className="flex items-start gap-3 min-w-0 flex-1">
-              
+
               <div className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0" />
 
               <div className="flex-1 space-y-3">
-                
+
                 <div className="h-4 w-52 bg-slate-200 dark:bg-slate-700 rounded" />
 
                 <div className="flex gap-3">
@@ -55,6 +55,7 @@ function JobSkeleton() {
                 </div>
 
                 <div className="h-3 w-40 bg-slate-200 dark:bg-slate-700 rounded" />
+
               </div>
             </div>
 
@@ -70,8 +71,6 @@ function JobSkeleton() {
     </div>
   );
 }
-
-
 
 function Jobs() {
   const [jobs, setJobs] = useState([]);
@@ -173,6 +172,8 @@ function Jobs() {
   // OPEN EDIT FORM
   // ==========================
   const openEditForm = (job) => {
+    console.log("EDIT BUTTON CLICKED:", job);
+
     setEditingId(job.id);
 
     setForm({
@@ -197,80 +198,147 @@ function Jobs() {
 
     setShowForm(true);
     setError("");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   // ==========================
   // SAVE JOB
   // ==========================
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+
+  const jobTitle = form.jobTitle.trim();
+  const company = form.company.trim();
+  const location = form.location.trim();
+  const jobType = form.jobType.trim();
+  const description = form.description.trim();
+  const status = form.status;
+  const appliedDate = form.appliedDate;
+
+  // Required fields
+  if (!jobTitle || !company) {
+    toast.error("Job title and company are required.");
+    return;
+  }
+
+  // Maximum character limits
+  if (jobTitle.length > 100) {
+    toast.error("Job title cannot exceed 100 characters.");
+    return;
+  }
+
+  if (company.length > 100) {
+    toast.error("Company name cannot exceed 100 characters.");
+    return;
+  }
+
+  if (location.length > 100) {
+    toast.error("Location cannot exceed 100 characters.");
+    return;
+  }
+
+  if (description.length > 2000) {
+    toast.error("Job description cannot exceed 2000 characters.");
+    return;
+  }
+
+  // Validate job type
+  const allowedJobTypes = [
+    "",
+    "Full Time",
+    "Part Time",
+    "Internship",
+    "Contract",
+  ];
+
+  if (!allowedJobTypes.includes(jobType)) {
+    toast.error("Please select a valid job type.");
+    return;
+  }
+
+  // Validate application status
+  const allowedStatuses = [
+    "SAVED",
+    "APPLIED",
+    "INTERVIEW",
+    "OFFER",
+    "REJECTED",
+  ];
+
+  if (!allowedStatuses.includes(status)) {
+    toast.error("Please select a valid application status.");
+    return;
+  }
+
+  // Validate applied date
+  if (appliedDate) {
+    const selectedDate = new Date(
+      `${appliedDate}T00:00:00`
+    );
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     if (
-      !form.jobTitle.trim() ||
-      !form.company.trim()
+      Number.isNaN(selectedDate.getTime()) ||
+      selectedDate > today
     ) {
       toast.error(
-        "Job title and company are required."
+        "Applied date cannot be in the future."
       );
-
       return;
     }
+  }
 
-    try {
-      setSaving(true);
-      setError("");
+  try {
+    setSaving(true);
+    setError("");
 
-      const payload = {
-        ...form,
+    const payload = {
+      ...form,
+      jobTitle,
+      company,
+      location,
+      jobType,
+      description,
+      appliedDate: appliedDate || null,
+    };
 
-        jobTitle: form.jobTitle.trim(),
+    let response;
 
-        company: form.company.trim(),
+    if (editingId) {
+      response = await updateJob(editingId, payload);
 
-        location: form.location.trim(),
-
-        jobType: form.jobType.trim(),
-
-        description: form.description.trim(),
-
-        appliedDate: form.appliedDate || null,
-      };
-
-      let response;
-
-      if (editingId) {
-        response = await updateJob(
-          editingId,
-          payload
-        );
-
-        toast.success(
-          response.message ||
-            "Job application updated successfully."
-        );
-      } else {
-        response = await createJob(payload);
-
-        toast.success(
-          response.message ||
-            "Job application created successfully."
-        );
-      }
-
-      resetForm();
-
-      await fetchJobs();
-    } catch (err) {
-      console.error("Save Job Error:", err);
-
-      toast.error(
-        err.response?.data?.message ||
-          "Unable to save job application."
+      toast.success(
+        response.message ||
+          "Job application updated successfully."
       );
-    } finally {
-      setSaving(false);
+    } else {
+      response = await createJob(payload);
+
+      toast.success(
+        response.message ||
+          "Job application created successfully."
+      );
     }
-  };
+
+    resetForm();
+    await fetchJobs();
+  } catch (err) {
+    console.error("Save Job Error:", err);
+
+    toast.error(
+      err.response?.data?.message ||
+        "Unable to save job application."
+    );
+  } finally {
+    setSaving(false);
+  }
+};
 
   // ==========================
   // QUICK STATUS UPDATE
@@ -336,7 +404,9 @@ function Jobs() {
     }
 
     try {
-      setDeletingId(pendingDeleteJob.id);
+      setDeletingId(
+        pendingDeleteJob.id
+      );
 
       setError("");
 
@@ -755,7 +825,6 @@ function Jobs() {
 
           <div className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
 
-            {/* SEARCH */}
             <div className="relative">
 
               <Search
@@ -775,7 +844,6 @@ function Jobs() {
 
             </div>
 
-            {/* STATUS FILTER */}
             <div className="relative">
 
               <Filter
@@ -819,7 +887,6 @@ function Jobs() {
 
             </div>
 
-            {/* SORT */}
             <div className="relative">
 
               <ArrowUpDown
@@ -1021,6 +1088,9 @@ function Jobs() {
 
                         </div>
 
+                        {/* ==========================
+                            ACTION BUTTONS
+                        ========================== */}
                         <div className="flex flex-wrap items-center gap-2">
 
                           <select
@@ -1054,25 +1124,58 @@ function Jobs() {
                             </option>
                           </select>
 
+                          {/* ==========================
+                              EDIT BUTTON - FIXED
+                          ========================== */}
+                          <button
+  type="button"
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setEditingId(job.id);
+
+    setForm({
+      jobTitle: job.jobTitle || "",
+      company: job.company || "",
+      location: job.location || "",
+      jobType: job.jobType || "",
+      description: job.description || "",
+      status: job.status || "SAVED",
+      appliedDate: job.appliedDate
+        ? new Date(job.appliedDate)
+            .toISOString()
+            .split("T")[0]
+        : "",
+    });
+
+    setShowForm(true);
+    setError("");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }}
+  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 cursor-pointer"
+>
+  <Pencil size={14} />
+  Edit
+</button>
+
+                          {/* ==========================
+                              DELETE BUTTON
+                          ========================== */}
                           <button
                             type="button"
-                            onClick={() =>
-                              openEditForm(job)
-                            }
-                            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition"
-                          >
-                            <Pencil
-                              size={14}
-                            />
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
 
-                            Edit
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              requestDelete(job)
-                            }
+                              requestDelete(
+                                job
+                              );
+                            }}
                             disabled={
                               deletingId ===
                               job.id

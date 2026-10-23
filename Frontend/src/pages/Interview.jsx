@@ -39,16 +39,13 @@ function InterviewSkeleton() {
           className="rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 p-4 animate-pulse"
         >
           <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-4">
-            
             <div className="flex items-start gap-3 min-w-0 flex-1">
-              
               <div className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0" />
 
-              <div className="flex-1 space-y-3">
-                
-                <div className="h-4 w-56 bg-slate-200 dark:bg-slate-700 rounded" />
+              <div className="flex-1 min-w-0 space-y-3">
+                <div className="h-4 w-56 max-w-full bg-slate-200 dark:bg-slate-700 rounded" />
 
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   <div className="h-3 w-24 bg-slate-200 dark:bg-slate-700 rounded" />
                   <div className="h-3 w-28 bg-slate-200 dark:bg-slate-700 rounded" />
                   <div className="h-3 w-20 bg-slate-200 dark:bg-slate-700 rounded" />
@@ -56,16 +53,15 @@ function InterviewSkeleton() {
 
                 <div className="h-3 w-36 bg-slate-200 dark:bg-slate-700 rounded" />
 
-                <div className="h-3 w-44 bg-slate-200 dark:bg-slate-700 rounded" />
+                <div className="h-3 w-44 max-w-full bg-slate-200 dark:bg-slate-700 rounded" />
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="h-9 w-24 bg-slate-200 dark:bg-slate-700 rounded-xl" />
-              <div className="h-9 w-16 bg-slate-200 dark:bg-slate-700 rounded-xl" />
-              <div className="h-9 w-20 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+            <div className="grid grid-cols-1 sm:flex sm:flex-wrap items-stretch gap-2 w-full xl:w-auto">
+              <div className="h-9 w-full sm:w-24 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+              <div className="h-9 w-full sm:w-16 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+              <div className="h-9 w-full sm:w-20 bg-slate-200 dark:bg-slate-700 rounded-xl" />
             </div>
-
           </div>
         </div>
       ))}
@@ -470,8 +466,8 @@ function Interview() {
             HEADER
         ========================== */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+          <div className="min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight break-words">
               Interview Preparation
             </h1>
 
@@ -485,7 +481,7 @@ function Interview() {
           <button
             type="button"
             onClick={openCreateForm}
-            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-lg shadow-blue-500/20 transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-lg shadow-blue-500/20 transition"
           >
             <Plus size={17} />
             Add Interview
@@ -497,7 +493,7 @@ function Interview() {
         ========================== */}
         {error && (
           <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-3">
-            <p className="text-xs font-semibold text-rose-600 dark:text-rose-400 text-center">
+            <p className="text-xs font-semibold text-rose-600 dark:text-rose-400 text-center break-words">
               {error}
             </p>
           </div>
@@ -507,18 +503,20 @@ function Interview() {
             ADD / EDIT FORM
         ========================== */}
         {showForm && (
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <div>
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+            <div className="flex items-start justify-between gap-3 mb-6">
+              <div className="min-w-0">
                 <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
                   <Sparkles
                     size={18}
-                    className="text-blue-500"
+                    className="text-blue-500 shrink-0"
                   />
 
-                  {editingId
-                    ? "Edit Interview"
-                    : "Schedule Interview"}
+                  <span className="break-words">
+                    {editingId
+                      ? "Edit Interview"
+                      : "Schedule Interview"}
+                  </span>
                 </h2>
 
                 <p className="text-xs text-slate-400 mt-1">
@@ -530,7 +528,7 @@ function Interview() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0"
               >
                 <X size={18} />
               </button>
@@ -551,7 +549,7 @@ function Interview() {
                   value={form.title}
                   onChange={handleChange}
                   placeholder="Backend Developer Mock Interview"
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full min-w-0 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               </div>
 
@@ -564,7 +562,7 @@ function Interview() {
                   name="type"
                   value={form.type}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full min-w-0 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 >
                   <option value="Technical">
                     Technical
@@ -599,7 +597,7 @@ function Interview() {
                   value={form.company}
                   onChange={handleChange}
                   placeholder="Infosys"
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full min-w-0 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               </div>
 
@@ -614,7 +612,7 @@ function Interview() {
                   value={form.role}
                   onChange={handleChange}
                   placeholder="Backend Developer"
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full min-w-0 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               </div>
 
@@ -627,7 +625,7 @@ function Interview() {
                   name="status"
                   value={form.status}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full min-w-0 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 >
                   <option value="PLANNED">
                     Planned
@@ -657,11 +655,11 @@ function Interview() {
                   name="scheduledAt"
                   value={form.scheduledAt}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full min-w-0 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               </div>
 
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 min-w-0">
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                   Notes
                 </label>
@@ -672,15 +670,15 @@ function Interview() {
                   onChange={handleChange}
                   rows={4}
                   placeholder="Important topics, preparation notes, interviewer details..."
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none"
+                  className="w-full min-w-0 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none"
                 />
               </div>
 
-              <div className="md:col-span-2 flex justify-end gap-2">
+              <div className="md:col-span-2 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
                 >
                   Cancel
                 </button>
@@ -688,7 +686,7 @@ function Interview() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition disabled:opacity-50"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition disabled:opacity-50"
                 >
                   {saving && (
                     <LoaderCircle
@@ -758,7 +756,7 @@ function Interview() {
         ========================== */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3">
-            <div className="relative">
+            <div className="relative min-w-0">
               <Search
                 size={16}
                 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
@@ -771,11 +769,11 @@ function Interview() {
                   setSearch(e.target.value)
                 }
                 placeholder="Search title, role, company or type..."
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500"
+                className="w-full min-w-0 pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-900 dark:text-white outline-none focus:border-blue-500"
               />
             </div>
 
-            <div className="relative">
+            <div className="relative min-w-0">
               <Filter
                 size={15}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
@@ -810,7 +808,7 @@ function Interview() {
               </select>
             </div>
 
-            <div className="relative">
+            <div className="relative min-w-0">
               <ArrowUpDown
                 size={15}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
@@ -854,9 +852,9 @@ function Interview() {
         {/* ==========================
             HISTORY
         ========================== */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between mb-5">
-            <div>
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+            <div className="min-w-0">
               <h2 className="text-base font-bold text-slate-900 dark:text-white">
                 Interview History
               </h2>
@@ -867,7 +865,7 @@ function Interview() {
               </p>
             </div>
 
-            <div className="px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold">
+            <div className="self-start sm:self-auto px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold">
               {interviews.length}
             </div>
           </div>
@@ -903,14 +901,14 @@ function Interview() {
                       className="rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 p-4"
                     >
                       <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-4">
-                        <div className="flex items-start gap-3 min-w-0">
+                        <div className="flex items-start gap-3 min-w-0 flex-1">
                           <div className="w-11 h-11 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                             <Mic size={21} />
                           </div>
 
-                          <div className="min-w-0">
+                          <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <h3 className="text-sm font-black text-slate-900 dark:text-white">
+                              <h3 className="text-sm font-black text-slate-900 dark:text-white break-words">
                                 {interview.title}
                               </h3>
 
@@ -928,31 +926,39 @@ function Interview() {
 
                             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-2 text-[10px] text-slate-500 dark:text-slate-400">
                               {interview.company && (
-                                <span className="inline-flex items-center gap-1.5">
-                                  <Building2 size={12} />
+                                <span className="inline-flex items-center gap-1.5 break-words">
+                                  <Building2
+                                    size={12}
+                                    className="shrink-0"
+                                  />
                                   {interview.company}
                                 </span>
                               )}
 
                               {interview.role && (
-                                <span className="inline-flex items-center gap-1.5">
+                                <span className="inline-flex items-center gap-1.5 break-words">
                                   <BriefcaseBusiness
                                     size={12}
+                                    className="shrink-0"
                                   />
                                   {interview.role}
                                 </span>
                               )}
 
                               {interview.type && (
-                                <span className="inline-flex items-center gap-1.5">
-                                  <Mic size={12} />
+                                <span className="inline-flex items-center gap-1.5 break-words">
+                                  <Mic
+                                    size={12}
+                                    className="shrink-0"
+                                  />
                                   {interview.type}
                                 </span>
                               )}
 
-                              <span className="inline-flex items-center gap-1.5">
+                              <span className="inline-flex items-center gap-1.5 break-words">
                                 <CalendarDays
                                   size={12}
+                                  className="shrink-0"
                                 />
 
                                 {formatDate(
@@ -962,7 +968,7 @@ function Interview() {
                             </div>
 
                             {interview.notes && (
-                              <p className="text-xs text-slate-600 dark:text-slate-300 mt-3 whitespace-pre-wrap">
+                              <p className="text-xs text-slate-600 dark:text-slate-300 mt-3 whitespace-pre-wrap break-words overflow-hidden">
                                 {interview.notes}
                               </p>
                             )}
@@ -978,7 +984,7 @@ function Interview() {
                           </div>
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-2">
+                        <div className="grid grid-cols-1 sm:flex sm:flex-wrap items-stretch gap-2 w-full xl:w-auto">
                           <select
                             value={interview.status}
                             onChange={(e) =>
@@ -987,7 +993,7 @@ function Interview() {
                                 e.target.value
                               )
                             }
-                            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none"
+                            className="w-full sm:w-auto px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none"
                           >
                             <option value="PLANNED">
                               Planned
@@ -1011,7 +1017,7 @@ function Interview() {
                             onClick={() =>
                               openEditForm(interview)
                             }
-                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition"
                           >
                             <Pencil size={14} />
                             Edit
@@ -1026,7 +1032,7 @@ function Interview() {
                               deletingId ===
                               interview.id
                             }
-                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500 hover:text-white border border-rose-500/20 transition disabled:opacity-50"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500 hover:text-white border border-rose-500/20 transition disabled:opacity-50"
                           >
                             {deletingId ===
                             interview.id ? (
