@@ -1,103 +1,49 @@
-import faiss
 import numpy as np
+
+try:
+    import faiss
+except Exception:  # pragma: no cover
+    faiss = None
 
 
 class VectorStore:
+    """FAISS vector store with a pure-numpy fallback."""
 
     def __init__(self, dimension):
-
         self.dimension = dimension
-
-        self.index = faiss.IndexFlatL2(dimension)
-
         self.chunks = []
+        self.index = faiss.IndexFlatL2(dimension) if faiss else None
+        self._vectors = np.empty((0, dimension), dtype="float32")
+
+    @property
+    def ntotal(self):
+        return len(self.chunks)
 
     def add(self, embeddings, chunks):
-
         if len(embeddings) != len(chunks):
-            raise ValueError(
-                "Number of embeddings must match number of chunks."
-            )
-
-        vectors = np.asarray(
-            embeddings,
-            dtype="float32"
-        )
-
-        self.index.add(vectors)
-
+            raise ValueError("Number of embeddings must match number of chunks.")
+        vectors = np.asarray(embeddings, dtype="float32")
+        if self.index is not None:
+            self.index.add(vectors)
+        self._vectors = np.vstack([self._vectors, vectors])
         self.chunks.extend(chunks)
 
     def search(self, query_embedding, top_k=3):
-
-        if self.index.ntotal == 0:
+        if not self.chunks:
             return []
+        q = np.asarray([query_embedding], dtype="float32")
+        top_k = min(top_k, len(self.chunks))
 
-        query_vector = np.asarray(
-            [query_embedding],
-            dtype="float32"
-        )
+        if self.index is not None:
+            distances, indices = self.index.search(q, top_k)
+            pairs = zip(distances[0], indices[0])
+        else:
+            d = ((self._vectors - q) ** 2).sum(axis=1)
+            order = np.argsort(d)[:top_k]
+            pairs = zip(d[order], order)
 
-        distances, indices = self.index.search(
-            query_vector,
-            top_k
-        )
-
-        results = []
-
-        for distance, index in zip(
-            distances[0],
-            indices[0]
-        ):
-
-            if index == -1:
-                continue
-
-            results.append({
-                "chunk": self.chunks[index],
-                "distance": float(distance)
-            })
-
-        return results
-
-
-if __name__ == "__main__":
-
-    print("\n========== VECTOR STORE TEST ==========")
-
-    chunks = [
-        "Python is a programming language.",
-        "FastAPI is used for building APIs.",
-        "AWS provides cloud computing services."
-    ]
-
-    # Temporary test embeddings
-    embeddings = np.random.rand(
-        len(chunks),
-        384
-    ).astype("float32")
-
-    store = VectorStore(384)
-
-    store.add(
-        embeddings,
-        chunks
-    )
-
-    query_embedding = np.random.rand(
-        384
-    ).astype("float32")
-
-    results = store.search(
-        query_embedding,
-        top_k=2
-    )
-
-    print("Total vectors:", store.index.ntotal)
-
-    print("\nSearch Results:")
-
-    for result in results:
-        print("\nChunk:", result["chunk"])
-        print("Distance:", result["distance"])
-        
+        return [
+            {"chunk": self.chunks[int(i)], "distance": float(d)}
+            for d, i in pairs
+            if int(i) != -1
+        ]

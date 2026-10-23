@@ -1,8 +1,11 @@
-# Lightweight production set (fits small free hosting plans).
-# The matcher automatically falls back to string similarity when
-# sentence-transformers is not installed (or AIML_LIGHT_MODE=1).
-flask==3.1.3
-gunicorn==23.0.0
-pypdf==5.9.0
-python-docx==1.2.0
-python-pptx==1.0.2
+flask>=3.0
+requests>=2.31
+numpy>=1.26
+pypdf>=4.0
+pdfplumber>=0.11
+python-docx>=1.1
+python-pptx>=0.6.23
+pymupdf>=1.24
+sentence-transformers>=2.7
+faiss-cpu>=1.8
+scikit-learn>=1.4

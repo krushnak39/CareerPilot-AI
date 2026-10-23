@@ -68,18 +68,3 @@ export const deleteStudyMaterial = async (
 
   return response.data;
 };
-
-// AI assistant: ask | summary | flashcards | quiz
-export const runStudyAssistant = async (
-  materialId,
-  action,
-  question = ""
-) => {
-  const response = await api.post(
-    `/study-materials/${materialId}/ai`,
-    { action, question },
-    { timeout: 150000 }
-  );
-
-  return response.data;
-};

@@ -1,3 +1,5 @@
+import StudyAIPanel from "../components/StudyAIPanel";
+import WeakTopics from "../components/WeakTopics";
 import {
   useEffect,
   useMemo,
@@ -23,7 +25,6 @@ import {
 } from "lucide-react";
 
 import toast from "react-hot-toast";
-import StudyAssistant from "../components/StudyAssistant";
 
 import {
   getStudyMaterials,
@@ -712,8 +713,6 @@ function StudyMaterials() {
 
       </div>
 
-      <StudyAssistant materials={materials} />
-
       {/* ==========================
           MATERIALS
       ========================== */}
@@ -866,6 +865,8 @@ function StudyMaterials() {
         {/* ==========================
             LOADING
         ========================== */}
+
+        <WeakTopics />
 
         {loading ? (
           <StudyMaterialSkeleton />
@@ -1091,6 +1092,8 @@ function StudyMaterials() {
                     </button>
 
                   </div>
+
+                  <StudyAIPanel material={material} />
 
                 </div>
 

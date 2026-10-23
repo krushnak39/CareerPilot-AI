@@ -14,10 +14,6 @@ const {
   deleteTopic,
 } = require("../controllers/learningRoadmap.controller");
 
-const {
-  createRoadmapFromAnalysis,
-} = require("../controllers/roadmapFromAnalysis.controller");
-
 const authMiddleware = require("../middleware/auth.middleware");
 
 const router = express.Router();
@@ -38,13 +34,6 @@ router.get(
   "/:id",
   authMiddleware,
   getRoadmapById
-);
-
-// Create roadmap from AI resume analysis
-router.post(
-  "/from-analysis",
-  authMiddleware,
-  createRoadmapFromAnalysis
 );
 
 // Create roadmap

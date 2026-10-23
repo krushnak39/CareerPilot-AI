@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import StudyMaterials from "./pages/StudyMaterials";
 import LearningRoadmap from "./pages/LearningRoadmap";
+import InterviewPractice from "./pages/InterviewPractice";
 
 import {
   Routes,
@@ -165,6 +166,13 @@ function App() {
           element={
             <Interview />
           }
+        />
+
+        <Route 
+        path="/interview-practice" 
+        element={
+          <InterviewPractice />
+          } 
         />
 
         <Route

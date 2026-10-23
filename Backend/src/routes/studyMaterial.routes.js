@@ -11,10 +11,6 @@ const {
   removeStudyMaterial,
 } = require("../controllers/studyMaterial.controller");
 
-const {
-  studyMaterialAI,
-} = require("../controllers/studyMaterialAI.controller");
-
 const authMiddleware =
   require("../middleware/auth.middleware");
 
@@ -174,16 +170,6 @@ router.get(
   "/:id/view",
   authMiddleware,
   viewStudyMaterial
-);
-
-// ==========================
-// AI ASSISTANT (ask / summary / flashcards / quiz)
-// POST /api/study-materials/:id/ai
-// ==========================
-router.post(
-  "/:id/ai",
-  authMiddleware,
-  studyMaterialAI
 );
 
 // ==========================

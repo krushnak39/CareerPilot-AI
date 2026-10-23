@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Features from "../components/Features";
 import HowItWorks from "../components/HowItWorks";
 import Stats from "../components/Stats";
+import Testimonials from "../components/Testimonials";
 import FAQ from "../components/FAQ";
 import Footer from "../components/Footer";
 
@@ -74,6 +75,7 @@ function Home() {
       <Features />
       <HowItWorks />
       <Stats />
+      <Testimonials />
       <FAQ />
       <Footer />
     </div>

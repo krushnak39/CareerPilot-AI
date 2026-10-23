@@ -1,6 +1,8 @@
+
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
 const {
   uploadResume,
@@ -15,95 +17,74 @@ const {
   updateResumeTitleController,
 } = require("../controllers/resume.controller");
 
-const {
-  analyzeResume,
-} = require("../controllers/resumeAnalysis.controller");
-
 const authMiddleware =
   require("../middleware/auth.middleware");
 
 const router = express.Router();
 
 // ==========================
-// MULTER STORAGE
+// 📁 RESUME STORAGE DIRECTORY
+// ==========================
+const resumeStorageDirectory = path.join(
+  process.cwd(),
+  "uploads",
+  "resumes"
+);
+
+// Automatically create the folder if it doesn't exist
+fs.mkdirSync(resumeStorageDirectory, {
+  recursive: true,
+});
+
+// ==========================
+// 📦 MULTER STORAGE
 // ==========================
 const storage = multer.diskStorage({
-  destination: (
-    req,
-    file,
-    cb
-  ) => {
-    cb(
-      null,
-      "uploads/resumes"
-    );
+  destination: (req, file, cb) => {
+    cb(null, resumeStorageDirectory);
   },
 
-  filename: (
-    req,
-    file,
-    cb
-  ) => {
+  filename: (req, file, cb) => {
     const uniqueName =
       `${Date.now()}-${Math.round(
         Math.random() * 1e9
-      )}${path.extname(
-        file.originalname
-      )}`;
+      )}${path.extname(file.originalname)}`;
 
-    cb(
-      null,
-      uniqueName
-    );
+    cb(null, uniqueName);
   },
 });
 
 // ==========================
-// FILE FILTER
+// 🛡️ FILE FILTER
 // ==========================
-const fileFilter = (
-  req,
-  file,
-  cb
-) => {
-  if (
-    file.mimetype ===
-    "application/pdf"
-  ) {
-    cb(
-      null,
-      true
-    );
-  } else {
-    const error =
-      new Error(
-        "Only PDF resumes are allowed"
-      );
-
-    error.statusCode = 400;
-
-    cb(
-      error,
-      false
-    );
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === "application/pdf") {
+    return cb(null, true);
   }
+
+  const error = new Error(
+    "Only PDF resumes are allowed"
+  );
+
+  error.statusCode = 400;
+
+  return cb(error, false);
 };
 
 // ==========================
-// MULTER CONFIG
+// ⚙️ MULTER CONFIGURATION
 // ==========================
 const upload = multer({
   storage,
   fileFilter,
 
   limits: {
-    fileSize:
-      5 * 1024 * 1024,
+    fileSize: 5 * 1024 * 1024, // Maximum: 5 MB
   },
 });
 
 // ==========================
-// UPLOAD RESUME
+// ⬆️ UPLOAD RESUME
 // POST /api/resumes
 // ==========================
 router.post(
@@ -114,7 +95,7 @@ router.post(
 );
 
 // ==========================
-// GET USER RESUMES
+// 📋 GET USER RESUMES
 // GET /api/resumes
 // ==========================
 router.get(
@@ -124,7 +105,7 @@ router.get(
 );
 
 // ==========================
-// SET PRIMARY RESUME
+// ⭐ SET PRIMARY RESUME
 // PATCH /api/resumes/:id/primary
 // ==========================
 router.patch(
@@ -134,7 +115,7 @@ router.patch(
 );
 
 // ==========================
-// UPDATE RESUME TITLE
+// ✏️ UPDATE RESUME TITLE
 // PATCH /api/resumes/:id/title
 // ==========================
 router.patch(
@@ -144,7 +125,7 @@ router.patch(
 );
 
 // ==========================
-// GET RESUME HISTORY
+// 🕘 GET RESUME HISTORY
 // GET /api/resumes/:id/history
 // ==========================
 router.get(
@@ -154,17 +135,7 @@ router.get(
 );
 
 // ==========================
-// ANALYZE RESUME (AI / ATS)
-// POST /api/resumes/:id/analyze
-// ==========================
-router.post(
-  "/:id/analyze",
-  authMiddleware,
-  analyzeResume
-);
-
-// ==========================
-// VIEW CURRENT RESUME
+// 👁️ VIEW CURRENT RESUME
 // GET /api/resumes/:id/view
 // ==========================
 router.get(
@@ -174,7 +145,7 @@ router.get(
 );
 
 // ==========================
-// VIEW HISTORY VERSION
+// 📄 VIEW HISTORY VERSION
 // GET /api/resumes/:id/history/:versionId/view
 // ==========================
 router.get(
@@ -184,7 +155,7 @@ router.get(
 );
 
 // ==========================
-// DOWNLOAD RESUME
+// ⬇️ DOWNLOAD RESUME
 // GET /api/resumes/:id/download
 // ==========================
 router.get(
@@ -194,7 +165,7 @@ router.get(
 );
 
 // ==========================
-// REPLACE RESUME
+// 🔄 REPLACE RESUME
 // PUT /api/resumes/:id
 // ==========================
 router.put(
@@ -205,7 +176,7 @@ router.put(
 );
 
 // ==========================
-// DELETE RESUME
+// 🗑️ DELETE RESUME
 // DELETE /api/resumes/:id
 // ==========================
 router.delete(

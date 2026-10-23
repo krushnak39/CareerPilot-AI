@@ -32,6 +32,9 @@ model User {
   userActivities       UserActivity[]
   profile              UserProfile?
   userSkills           UserSkill[]
+  resumeAnalyses       ResumeAnalysis[]
+  studyArtifacts       StudyArtifact[]
+  weakTopics           WeakTopic[]
 }
 
 model UserProfile {
@@ -77,6 +80,7 @@ model Resume {
   title     String?
   user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   versions  ResumeVersion[]
+  analysis  ResumeAnalysis?
 }
 
 model ResumeVersion {
@@ -115,6 +119,7 @@ model InterviewSession {
   status      String    @default("PLANNED")
   scheduledAt DateTime?
   notes       String?
+  questions   Json?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -242,6 +247,7 @@ model StudyMaterial {
   fileSize   Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  artifacts  StudyArtifact[]
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -294,4 +300,46 @@ model RoadmapTopic {
   @@index([moduleId])
   @@index([order])
   @@index([dueDate])
+}
+
+
+model ResumeAnalysis {
+  id             String   @id @default(cuid())
+  userId         String
+  resumeId       String   @unique
+  atsScore       Float
+  domain         String?
+  jobDescription String?
+  result         Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resume         Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model StudyArtifact {
+  id         String        @id @default(cuid())
+  userId     String
+  materialId String
+  kind       String
+  data       Json
+  createdAt  DateTime      @default(now())
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  material   StudyMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@index([userId, materialId, kind])
+}
+
+model WeakTopic {
+  id           String   @id @default(cuid())
+  userId       String
+  topic        String
+  correctCount Int      @default(0)
+  wrongCount   Int      @default(0)
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, topic])
 }

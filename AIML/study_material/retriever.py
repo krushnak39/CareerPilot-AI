@@ -1,5 +1,5 @@
-from study_material.embedder import TextEmbedder
-from study_material.vector_store import VectorStore
+from AIML.study_material.embedder import TextEmbedder
+from AIML.study_material.vector_store import VectorStore
 
 
 class Retriever:

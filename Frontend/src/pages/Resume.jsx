@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 
 import toast from "react-hot-toast";
+import ResumeAIPanel from "../components/ResumeAIPanel";
 
 import {
   uploadResume,
@@ -40,7 +41,6 @@ import {
 } from "../api/resume";
 
 import ConfirmModal from "../components/ConfirmModal";
-import ResumeAnalysis from "../components/ResumeAnalysis";
 
 function ResumeSkeleton() {
   return (
@@ -92,6 +92,11 @@ function Resume() {
   // ==========================
   const [sortOption, setSortOption] =
     useState("newest");
+
+  const [currentPage, setCurrentPage] =
+    useState(1);
+
+  const resumesPerPage = 5;
 
   const [uploading, setUploading] =
     useState(false);
@@ -303,6 +308,18 @@ function Resume() {
         return 0;
       }
     );
+
+  const totalPages = Math.ceil(
+    sortedResumes.length / resumesPerPage
+  );
+
+  const startIndex =
+    (currentPage - 1) * resumesPerPage;
+
+  const paginatedResumes = sortedResumes.slice(
+    startIndex,
+    startIndex + resumesPerPage
+  );
 
   // ==========================
   // SELECT NEW RESUME
@@ -1025,13 +1042,6 @@ function Resume() {
         </div>
 
         {/* ==========================
-            AI ANALYSIS
-        ========================== */}
-        <ResumeAnalysis
-          resumes={resumes}
-        />
-
-        {/* ==========================
             LOAD ERROR
         ========================== */}
         {error && (
@@ -1095,7 +1105,7 @@ function Resume() {
         {selectedFile && (
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
 
-            <div className="grid lg:grid-cols-[1fr_1fr_auto] gap-4 items-end">
+           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_auto] gap-4 items-stretch lg:items-end">
 
               <div className="flex items-center gap-3.5 min-w-0">
 
@@ -1152,7 +1162,7 @@ function Resume() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex w-full sm:w-auto items-center gap-2">
 
                 <button
                   type="button"
@@ -1177,7 +1187,7 @@ function Resume() {
                   disabled={
                     uploading
                   }
-                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 transition disabled:opacity-50"
+                  className="flex flex-1 sm:flex-none items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 transition disabled:opacity-50"
                 >
                   {uploading ? (
                     <>
@@ -1209,7 +1219,7 @@ function Resume() {
         ========================== */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
 
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
 
             <div>
               <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
@@ -1224,16 +1234,16 @@ function Resume() {
             </div>
 
             {/* SORT DROPDOWN */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex w-full sm:w-auto items-center gap-2">
 
               <select
                 value={sortOption}
-                onChange={(e) =>
-                  setSortOption(
-                    e.target.value
-                  )
+                onChange={(e) => {
+                  setSortOption(e.target.value);
+                  setCurrentPage(1);
                 }
-                className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-semibold text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+              }
+                className="flex-1 sm:flex-none px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-semibold text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
               >
                 <option value="newest">
                   Newest First
@@ -1289,7 +1299,7 @@ function Resume() {
               0 && (
               <div className="space-y-4">
 
-                {sortedResumes.map(
+                {paginatedResumes.map(
                   (resume) => (
                     <div
                       key={
@@ -1411,7 +1421,7 @@ function Resume() {
 
                                 </div>
                               ) : (
-                                <div className="flex flex-wrap items-center gap-2">
+                                <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-stretch gap-2 w-full xl:w-auto">
 
                                   <h3 className="text-sm font-black text-slate-900 dark:text-white">
                                     {resume.title ||
@@ -1741,6 +1751,8 @@ function Resume() {
 
                       </div>
 
+                      <ResumeAIPanel resume={resume} />
+
                       {/* ==========================
                           HISTORY
                       ========================== */}
@@ -1923,6 +1935,57 @@ function Resume() {
                     </div>
                   )
                 )}
+
+                {totalPages > 1 && (
+  <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-slate-200 pt-5 dark:border-slate-700 sm:flex-row">
+
+    <p className="text-xs text-slate-500 dark:text-slate-400">
+      Showing{" "}
+      {startIndex + 1}–
+      {Math.min(
+        startIndex + resumesPerPage,
+        sortedResumes.length
+      )}{" "}
+      of {sortedResumes.length} resumes
+    </p>
+
+    <div className="flex w-full sm:w-auto items-center justify-center gap-2">
+
+      <button
+        type="button"
+        onClick={() =>
+          setCurrentPage((page) =>
+            Math.max(page - 1, 1)
+          )
+        }
+        disabled={currentPage === 1}
+        className="flex-1 sm:flex-none rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+      >
+        Previous
+      </button>
+
+      <span className="rounded-xl bg-blue-500/10 px-3 py-2 text-xs font-bold text-blue-600 dark:text-blue-400">
+        Page {currentPage} of {totalPages}
+      </span>
+
+      <button
+        type="button"
+        onClick={() =>
+          setCurrentPage((page) =>
+            Math.min(page + 1, totalPages)
+          )
+        }
+        disabled={
+          currentPage === totalPages
+        }
+        className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+      >
+        Next
+      </button>
+
+    </div>
+  </div>
+)}
 
               </div>
             )}

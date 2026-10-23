@@ -1,3 +1,4 @@
+
 import DashboardCard from "../components/DashboardCard";
 import ProgressChart from "../components/ProgressChart";
 import {
@@ -18,26 +19,13 @@ import { getActivities } from "../api/activity";
 
 function Dashboard() {
   const { user } = useUser();
-  const hour = new Date().getHours();
-
-  let greeting = "Good Morning";
-
-  if (hour >= 12 && hour < 17) {
-    greeting = "Good Afternoon";
-  } else if (hour >= 17) {
-    greeting = "Good Evening";
-  }
-
-  const firstName = user?.fullName?.split(" ")[0] || "";
 
   const [stats, setStats] = useState({
     resumeCount: 0,
     jobCount: 0,
     interviewCount: 0,
-    roadmapCount: 0,
-    studyMaterialCount: 0,
-    analysis: null,
-    chart: [],
+    learningProgressPercent: 0,
+    skillGapCount: 0,
   });
 
   const [activities, setActivities] = useState([]);
@@ -47,8 +35,11 @@ function Dashboard() {
       try {
         const response = await getDashboard();
 
-        if (response?.data?.data) {
-          setStats(response.data.data);
+        if (response?.data?.success && response?.data?.data) {
+          setStats((previousStats) => ({
+            ...previousStats,
+            ...response.data.data,
+          }));
         }
       } catch (error) {
         console.error("Dashboard Error:", error);
@@ -63,7 +54,7 @@ function Dashboard() {
       try {
         const response = await getActivities();
 
-        if (response?.data?.data) {
+        if (response?.data?.success && Array.isArray(response?.data?.data)) {
           setActivities(response.data.data);
         }
       } catch (error) {
@@ -130,17 +121,8 @@ function Dashboard() {
         />
 
         <DashboardCard
-          title={
-            stats.analysis?.topCareer
-              ? `Top Career Match: ${stats.analysis.topCareer}`
-              : "Career Match"
-          }
-          value={
-            stats.analysis &&
-            stats.analysis.topMatch != null
-              ? `${Math.round(stats.analysis.topMatch)}%`
-              : "Not analyzed"
-          }
+          title="Skill Gaps"
+          value={stats.skillGapCount}
           icon={<Brain size={24} />}
           color="text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60"
         />
@@ -163,7 +145,6 @@ function Dashboard() {
                 <div className="w-12 h-12 mx-auto rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <FileText size={24} />
                 </div>
-
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   Resume
                 </p>
@@ -176,7 +157,6 @@ function Dashboard() {
                 <div className="w-12 h-12 mx-auto rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <BookOpen size={24} />
                 </div>
-
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   Learning
                 </p>
@@ -189,7 +169,6 @@ function Dashboard() {
                 <div className="w-12 h-12 mx-auto rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <Target size={24} />
                 </div>
-
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   Interview
                 </p>
@@ -202,7 +181,6 @@ function Dashboard() {
                 <div className="w-12 h-12 mx-auto rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <Brain size={24} />
                 </div>
-
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   Profile
                 </p>
@@ -210,7 +188,7 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Activity Section */}
+          {/* Recent Activity */}
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
               <Clock size={18} className="text-blue-500" />
@@ -247,7 +225,9 @@ function Dashboard() {
                     </div>
 
                     <span className="text-[10px] font-semibold text-slate-400">
-                      {new Date(activity.createdAt).toLocaleDateString()}
+                      {activity.createdAt
+                        ? new Date(activity.createdAt).toLocaleDateString()
+                        : ""}
                     </span>
                   </div>
                 ))
@@ -258,7 +238,10 @@ function Dashboard() {
 
         {/* Progress Chart */}
         <div className="lg:col-span-1">
-          <ProgressChart data={stats.chart} />
+          <ProgressChart
+            learningProgress={stats.learningProgressPercent}
+            skillGapCount={stats.skillGapCount}
+          />
         </div>
       </div>
     </div>

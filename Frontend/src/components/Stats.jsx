@@ -1,20 +1,20 @@
 function Stats() {
   const stats = [
     {
-      number: "ATS",
-      label: "Resume Scoring",
+      number: "10K+",
+      label: "Active Job Seekers",
     },
     {
-      number: "AI",
-      label: "Career Matching",
+      number: "95%",
+      label: "ATS Score Accuracy",
     },
     {
-      number: "Roadmaps",
-      label: "Personalized Learning Paths",
+      number: "500+",
+      label: "Guided Resources",
     },
     {
-      number: "Quiz",
-      label: "AI Study Assistant",
+      number: "24/7",
+      label: "AI Mentor Support",
     },
   ];
 

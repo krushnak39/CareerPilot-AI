@@ -2,7 +2,10 @@ from pathlib import Path
 from pypdf import PdfReader
 from docx import Document
 from pptx import Presentation
-from parser.cleaner import TextCleaner
+try:
+    from parser.cleaner import TextCleaner
+except ImportError:
+    from AIML.parser.cleaner import TextCleaner
 
 
 class StudyMaterialExtractor:

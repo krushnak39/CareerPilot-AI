@@ -6,9 +6,8 @@ import {
   Play,
   Loader2,
 } from "lucide-react";
-import { API_BASE_URL } from "../api/baseUrl";
 
-const API_URL = API_BASE_URL;
+const API_URL = "http://localhost:5000/api";
 
 function Learning() {
   const [resources, setResources] = useState([]);

@@ -106,15 +106,3 @@ export const deleteRoadmapTopic = async (topicId) => {
   );
   return response.data;
 };
-
-// Create a roadmap from AI resume analysis
-export const createRoadmapFromAnalysis = async (
-  career,
-  roadmap
-) => {
-  const response = await api.post(
-    "/learning-roadmaps/from-analysis",
-    { career, roadmap }
-  );
-  return response.data;
-};

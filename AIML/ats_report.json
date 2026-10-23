@@ -1,14 +1,14 @@
 {
     "ats_score": 88.89,
     "matched_skills": [
-        "aws",
-        "fastapi",
-        "sql",
-        "mongodb",
-        "python",
-        "git",
         "docker",
-        "linux"
+        "git",
+        "mongodb",
+        "linux",
+        "aws",
+        "python",
+        "sql",
+        "fastapi"
     ],
     "missing_skills": [
         "rest api"

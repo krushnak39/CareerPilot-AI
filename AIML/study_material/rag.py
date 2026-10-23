@@ -1,7 +1,7 @@
-from study_material.extractor import StudyMaterialExtractor
-from study_material.chunker import TextChunker
-from study_material.retriever import Retriever
-from study_material.generator import LLMGenerator
+from AIML.study_material.extractor import StudyMaterialExtractor
+from AIML.study_material.chunker import TextChunker
+from AIML.study_material.retriever import Retriever
+from AIML.study_material.generator import LLMGenerator
 
 
 class RAGPipeline:
